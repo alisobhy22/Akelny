@@ -8,16 +8,10 @@ public class Users {
 
     public class user {
         public String name;
-        public String username;
-        public String password;
-        public String email;
         public String phoneNum;
 
-        public user(String name, String username, String password, String email, String Phone) {
+        public user(String name, String Phone) {
             this.name= name;
-            this.username = username;
-            this.password = password;
-            this.email = email;
             this.phoneNum = Phone;
         }
     }
@@ -25,12 +19,12 @@ public class Users {
 
     public ArrayList<user> users = new ArrayList<>();
 
-    public void Users() { // intialzing array
+    /*public void Users() { // intialzing array
         users.add(new user("Amy Samy", "AmySamy1234", "Ayms123", "AmySamy@aucegypt.edu", "01270"));
         users.add(new user("Afifi", "Afifi1412", "Obsidian", "Mohamed_afifi@aucegypt.edu", "01115"));
         users.add(new user("Ali Sobhy", "AliSobhy22", "AlisPass", "AliSobhy@aucegypt.edu", "01001"));
         users.add(new user("Menna Wagdy", "MennaWagdy4321", "MennaPass", "MennaWagdy@aucegypt.edu", "01014"));
-    }
+    }*/
 
     public boolean validateNumber(String number) {
         boolean validated = false;
@@ -56,16 +50,16 @@ public class Users {
     }
 
 
-    public boolean ValidateUser(String user, String pass) //login
+    public boolean ValidateUser(String name, String phone) //login
     {
         boolean found1 = false, found2 = false, found3 = false, found4 = false;
 
         for (int i = 0; i < users.size(); i++) {
             user temp;
             temp = users.get(i);
-            if (temp.username.equals(user))
+            if (temp.name.equals(name))
                 found1 = true;
-            if (temp.password.equals(pass))
+            if (temp.phoneNum.equals(phone))
                 found2 = true;
         }
         if (found1 && found2)
@@ -104,33 +98,21 @@ public class Users {
         return true;
     }
 
-    public int register(String name, String username, String password, String confirmPassword, String email, String phoneNum) {
-
+    public int register(String name, String phoneNum) {
 
         for (int i = 0; i < users.size(); i++) {
             user temp;
             temp = users.get(i);
-            if (temp.username.equals(username))
-                return 1; //Username already exists
+            if (temp.phoneNum.equals(phoneNum))
+                return 1;//phone number already exists
         }
-
-        /*if (!verifyPassword(password, username))
-        {
-            System.out.println(password);
-            return 2; //Password is invalid
-        }*/
-        if (!password.equals(confirmPassword))
-            return 3; //passwords do not match
 
         if (!validateNumber(phoneNum)) {
-            return 4;//number is not valid (note, it should start with 0020)
+            return 2;//number is not valid (note, it should start with 0020)
         }
 
-        if (!validateEmail(email)) {
-            return 5;//email is not valid (note, it should end with edu)
-        }
 
-        user userToRegister = new user(name, username, password, email, phoneNum);
+        user userToRegister = new user(name, phoneNum);
         users.add(userToRegister);
         return 0;//successful registration
     }
