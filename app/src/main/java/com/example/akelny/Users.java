@@ -1,11 +1,25 @@
 package com.example.akelny;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Users {
 
+    public FirebaseDatabase database;
+    public DatabaseReference myRef;
+    public ArrayList<user> users;
+    public boolean validated;
     public class user {
         public String name;
         public String phoneNum;
@@ -17,19 +31,17 @@ public class Users {
     }
 
 
-    public ArrayList<user> users = new ArrayList<>();
 
-    /*public void Users() { // intialzing array
-        users.add(new user("Amy Samy", "AmySamy1234", "Ayms123", "AmySamy@aucegypt.edu", "01270"));
-        users.add(new user("Afifi", "Afifi1412", "Obsidian", "Mohamed_afifi@aucegypt.edu", "01115"));
-        users.add(new user("Ali Sobhy", "AliSobhy22", "AlisPass", "AliSobhy@aucegypt.edu", "01001"));
-        users.add(new user("Menna Wagdy", "MennaWagdy4321", "MennaPass", "MennaWagdy@aucegypt.edu", "01014"));
-    }*/
+    public Users() { // intialzing array
+        users = new ArrayList<>();
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
+    }
 
     public boolean validateNumber(String number) {
         boolean validated = false;
         String regex;
-        regex = "002010\\d{8}|002011\\d{8}|002012\\d{8}|002015\\d{8} ";
+        regex = "010\\d{8}|011\\d{8}|012\\d{8}|015\\d{8} ";
         Pattern pt = Pattern.compile(regex);
         Matcher mt = pt.matcher(number);
         validated = mt.matches();
@@ -52,19 +64,29 @@ public class Users {
 
     public boolean ValidateUser(String name, String phone) //login
     {
-        boolean found1 = false, found2 = false, found3 = false, found4 = false;
+        DatabaseReference users = database.getReference("User");
+        users.child(phone).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                Log.d("phone",phone);
+                if (task.isSuccessful()){
 
-        for (int i = 0; i < users.size(); i++) {
-            user temp;
-            temp = users.get(i);
-            if (temp.name.equals(name))
-                found1 = true;
-            if (temp.phoneNum.equals(phone))
-                found2 = true;
-        }
-        if (found1 && found2)
-            return true;
-        return false;
+                    if (task.getResult().exists()){
+                        Log.d("msg","First");
+
+                        validated = true;
+                    }else {
+                        Log.d("msg","Second");
+                        validated = false;
+                    }
+                }else {
+                    Log.d("msg","Third");
+                    validated = false;
+                }
+            }
+        });
+        Log.d("return",String.valueOf(validated));
+        return validated;
     }
 
 
@@ -100,7 +122,7 @@ public class Users {
 
     public int register(String name, String phoneNum) {
 
-        for (int i = 0; i < users.size(); i++) {
+      /*  for (int i = 0; i < users.size(); i++) {
             user temp;
             temp = users.get(i);
             if (temp.phoneNum.equals(phoneNum))
@@ -109,11 +131,12 @@ public class Users {
 
         if (!validateNumber(phoneNum)) {
             return 2;//number is not valid (note, it should start with 0020)
-        }
+        }*/
 
 
         user userToRegister = new user(name, phoneNum);
         users.add(userToRegister);
+        myRef.child("User").child(phoneNum).setValue(userToRegister);
         return 0;//successful registration
     }
 }

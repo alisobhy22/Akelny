@@ -1,24 +1,31 @@
 package com.example.akelny;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Login extends AppCompatActivity {
 
     TextInputEditText userNameEntry;
     EditText numberEntry;
 
-    String username1, number1;
+    String username, number;
 
     Button signInBtn;
     Button registerBtn;
@@ -43,39 +50,42 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         userNameEntry= (TextInputEditText) findViewById(R.id.userNameEntry);
         numberEntry= (EditText) findViewById(R.id.numberEntry);
 
         signInBtn= (Button) findViewById(R.id.button);
         registerBtn= (Button) findViewById(R.id.button2);
 
-        Users user1 = new Users();
-
-        if (getIntent().getStringExtra("code").equals("1"))
-        {
-            String name= getIntent().getStringExtra("name");
-            String number= getIntent().getStringExtra("number");
-
-            user1.register(name,number);
-        }
+        Users users = new Users();
 
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                username1= String.valueOf(userNameEntry.getText());
-                number1= String.valueOf(numberEntry.getText());
-                if (user1.ValidateUser(username1, number1))
-                {
-                    Intent intent= new Intent(Login.this, Homepage.class);
-                    startActivity(intent);
-                }else
-                {
-                    alertDialog();
-                }
+                username = String.valueOf(userNameEntry.getText());
+                number = String.valueOf(numberEntry.getText());
+
+                DatabaseReference users = database.getReference("User");
+                users.child(number).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (task.isSuccessful()) {
+
+                            if (task.getResult().exists()) {
+                                Log.d("msg", "First");
+                                Intent intent = new Intent(Login.this, Homepage.class);
+                                startActivity(intent);
+
+                            } else {
+                                alertDialog();
+                            }
+                        } else {
+                            alertDialog();
+                        }
+                    }
+                });
             }
         });
-
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

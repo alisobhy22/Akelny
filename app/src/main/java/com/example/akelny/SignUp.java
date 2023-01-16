@@ -62,10 +62,6 @@ public class SignUp extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
-        myRef.setValue("Hi,this is my db");
-
 
         nameEntry= (TextInputEditText) findViewById(R.id.nameEntry);
         //userNameEntry= (TextInputEditText) findViewById(R.id.userNameEntry);
@@ -94,9 +90,6 @@ public class SignUp extends AppCompatActivity {
                 if (checkRegisterReturn==0)
                 {
                     Intent intent= new Intent(SignUp.this, Login.class);
-                    intent.putExtra("code", "1");
-                    intent.putExtra("name", name);
-                    intent.putExtra("number", number);
                     startActivity(intent);
                 }
                 else if(checkRegisterReturn==1)
