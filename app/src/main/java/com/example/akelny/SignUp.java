@@ -4,17 +4,31 @@ import static android.graphics.BlendMode.COLOR;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.SmsManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.auth.api.phone.SmsRetriever;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -40,53 +54,73 @@ public class SignUp extends AppCompatActivity {
     Button registerButton;
     Button goToSignInBtn;
 
-    /*public void alertDialog() {
-        AlertDialog.Builder dialog=new AlertDialog.Builder(this);
-        String message;
-        message= "Please enter one that is at least 8 characters, includes one uppercase letter, one lowercase letter, one number, one special character, does not start or end with a number and should not be the same as the username or in reverse";
-        dialog.setMessage(message);
-        dialog.setTitle("Invalid password");
-        dialog.setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,
-                                        int which) {
-                    }
-                });
+    private static final int SMS_CONSENT_REQUEST = 2;  // Set to an unused request code
+    private final BroadcastReceiver smsVerificationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (SmsRetriever.SMS_RETRIEVED_ACTION.equals(intent.getAction())) {
+                Bundle extras = intent.getExtras();
+                Status smsRetrieverStatus = (Status) extras.get(SmsRetriever.EXTRA_STATUS);
 
-        AlertDialog alertDialog=dialog.create();
-        alertDialog.show();
-    }*/
+                switch (smsRetrieverStatus.getStatusCode()) {
+                    case CommonStatusCodes.SUCCESS:
+                        // Get consent intent
+                        Intent consentIntent = extras.getParcelable(SmsRetriever.EXTRA_CONSENT_INTENT);
+                        try {
+                            // Start activity to show consent dialog to user, activity must be started in
+                            // 5 minutes, otherwise you'll receive another TIMEOUT intent
+                            startActivityForResult(consentIntent, SMS_CONSENT_REQUEST);
+                        } catch (ActivityNotFoundException e) {
+                            // Handle the exception ...
+                        }
+                        break;
+                    case CommonStatusCodes.TIMEOUT:
+                        // Time out occurred, handle the error.
+                        break;
+                }
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        //IntentFilter intentFilter = new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION);
+
+        nameEntry = (TextInputEditText) findViewById(R.id.nameEntry);
+        numberEntry = (EditText) findViewById(R.id.numberEntry);
 
 
-        nameEntry= (TextInputEditText) findViewById(R.id.nameEntry);
-        //userNameEntry= (TextInputEditText) findViewById(R.id.userNameEntry);
-        //passwordEntry= (EditText) findViewById(R.id.passwordEntry);
-        //confirmPasswordEntry= (EditText) findViewById(R.id.confirmPasswordEntry);
-        //emailEntry= (EditText) findViewById(R.id.emailEntry);
-        numberEntry= (EditText) findViewById(R.id.numberEntry);
+        registerButton = (Button) findViewById(R.id.registerButton);
+        goToSignInBtn = (Button) findViewById(R.id.goToSignInBtn);
 
-
-        registerButton= (Button) findViewById(R.id.registerButton);
-        goToSignInBtn= (Button) findViewById(R.id.goToSignInBtn);
-
-        users= new Users();
+        users = new Users();
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                name= String.valueOf(nameEntry.getText());
-                /*username= String.valueOf(userNameEntry.getText());
-                password= passwordEntry.getText().toString();
-                confirmPassword= confirmPasswordEntry.getText().toString();
-                email= String.valueOf(emailEntry.getText());*/
-                number= String.valueOf(numberEntry.getText());
+                name = String.valueOf(nameEntry.getText());
+                number = String.valueOf(numberEntry.getText());
                 int checkRegisterReturn;
-                checkRegisterReturn= users.register(name, number);
+
+                if (users.validateNumber(number))
+                {
+                    //Task<Void> task = SmsRetriever.getClient(getApplicationContext()).startSmsUserConsent(null);
+
+                    //IntentFilter intentFilter = new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION);
+                    //registerReceiver(smsVerificationReceiver, intentFilter);
+                    users.register(name, number);
+                    Intent intent= new Intent(SignUp.this, Login.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    numberEntry.setHint("Phone number is incorrect");
+                    numberEntry.setHintTextColor(Integer.parseInt("FF0000"));
+                }
+                /*checkRegisterReturn= users.register(name, number);
                 if (checkRegisterReturn==0)
                 {
                     Intent intent= new Intent(SignUp.this, Login.class);
@@ -100,7 +134,7 @@ public class SignUp extends AppCompatActivity {
                 {
                     numberEntry.setHint("Your phone number is not valid");
                     numberEntry.setHintTextColor(Integer.parseInt("FF0000"));
-                }
+                }*/
             }
         });
 

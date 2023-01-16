@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -45,14 +46,11 @@ public class Users {
 
         return validated;
     }
-    public int register(String name, String phoneNum) {
-        if(validateNumber(phoneNum)) {
+    public void register(String name, String phoneNum) {
+
             user userToRegister = new user(name, phoneNum);
             users.add(userToRegister);
             myRef.child("User").child(phoneNum).setValue(userToRegister);
-            return 0;//successful registration
-        }
-        else
-            return 1;
+
     }
 }
