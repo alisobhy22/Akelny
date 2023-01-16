@@ -13,11 +13,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.IdpResponse;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.Arrays;
+import java.util.List;
+
+
 public class SignUp extends AppCompatActivity {
 
+    private static final int RC_SIGN_IN = 123;
     TextInputEditText nameEntry;
     EditText numberEntry;
 
@@ -48,6 +60,12 @@ public class SignUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+        myRef.setValue("Hi,this is my db");
+
 
         nameEntry= (TextInputEditText) findViewById(R.id.nameEntry);
         //userNameEntry= (TextInputEditText) findViewById(R.id.userNameEntry);
