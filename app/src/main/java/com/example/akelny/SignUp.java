@@ -140,7 +140,6 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent= new Intent(SignUp.this, Login.class);
-                intent.putExtra("code", "0");
                 startActivity(intent);
             }
         });

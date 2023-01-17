@@ -73,7 +73,8 @@ public class Login extends AppCompatActivity {
 
                             if (task.getResult().exists()) {
                                 Log.d("msg", "First");
-                                Intent intent = new Intent(Login.this, Homepage.class);
+                                Intent intent = new Intent(Login.this, TableReservation.class);
+                                intent.putExtra("user number", number);
                                 startActivity(intent);
 
                             } else {

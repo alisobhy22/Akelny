@@ -136,18 +136,18 @@
     android:layout_weight="0.75"
     android:gravity="center|fill_vertical">
     <Button
-        android:id="@+id/button"
+        android:id="@+id/reserveBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
-        android:text="Confirm"
+        android:text="Reserve"
         android:textColor="@color/black"
         android:backgroundTint="#a8c987"
         android:fontFamily="casual"
         />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/cancelBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
