@@ -31,6 +31,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -39,6 +40,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public class SignUp extends AppCompatActivity {
@@ -107,10 +109,6 @@ public class SignUp extends AppCompatActivity {
 
                 if (users.validateNumber(number))
                 {
-                    //Task<Void> task = SmsRetriever.getClient(getApplicationContext()).startSmsUserConsent(null);
-
-                    //IntentFilter intentFilter = new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION);
-                    //registerReceiver(smsVerificationReceiver, intentFilter);
                     users.register(name, number);
                     Intent intent= new Intent(SignUp.this, Login.class);
                     startActivity(intent);

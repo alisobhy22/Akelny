@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "689449520404",
+    "firebase_url": "https://akelny-b14e2-default-rtdb.firebaseio.com",
+    "project_id": "akelny-b14e2",
+    "storage_bucket": "akelny-b14e2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689449520404:android:d431d4c55ee425de3d0601",
+        "android_client_info": {
+          "package_name": "com.example.akelny"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "689449520404-nsiri7j6n8hqtqspqqk66nuplv7ksftp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApa_jk_kxVxsev8LrsG9uO6IgwEFWyS8k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "689449520404-nsiri7j6n8hqtqspqqk66nuplv7ksftp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
