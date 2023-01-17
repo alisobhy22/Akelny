@@ -23,10 +23,20 @@ public class MainScreen extends AppCompatActivity {
         userBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(MainScreen.this, SignUp.class);
+                Intent intent= new Intent(MainScreen.this, Login.class);
                 startActivity(intent);
             }
         });
+
+        restaurantBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(MainScreen.this, RestaurantSignIn.class);
+                startActivity(intent);
+            }
+        });
+
+
 
     }
 }

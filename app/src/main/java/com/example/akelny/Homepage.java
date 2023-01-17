@@ -20,7 +20,7 @@ public class Homepage extends AppCompatActivity {
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent= new Intent(Homepage.this, Login.class);
+                Intent intent= new Intent(Homepage.this, MainScreen.class);
                 startActivity(intent);
             }
         });
