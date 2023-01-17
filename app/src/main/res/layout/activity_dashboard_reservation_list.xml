@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/reservation_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reservation Name"
+            android:textSize="20sp"
+            android:textAlignment="center"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/accept_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Accept"
+                android:textSize="12sp"
+                android:minWidth="60dp"
+                android:minHeight="30dp"
+                android:layout_marginRight="10dp"/>
+
+            <Button
+                android:id="@+id/decline_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Decline"
+                android:textSize="12sp"
+                android:minWidth="60dp"
+                android:minHeight="30dp"
+                android:layout_marginRight="10dp"/>
+
+            <Button
+                android:id="@+id/waiting_list_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Waiting List"
+                android:textSize="12sp"
+                android:minWidth="60dp"
+                android:minHeight="30dp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

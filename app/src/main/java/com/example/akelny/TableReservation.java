@@ -24,7 +24,7 @@ class Reservation{
     public String userNumber;
     public String restaurantName;
 
-    public Reservation(String numberOfPeople, String reservationDate, String reservationTime, String specialRequests, String userNumber, String status)
+    public Reservation(String numberOfPeople, String reservationDate, String reservationTime, String specialRequests, String userNumber, String status,String restaurantName)
     {
         this.numberOfPeople= numberOfPeople;
         this.reservationDate= reservationDate;
@@ -32,6 +32,7 @@ class Reservation{
         this.specialRequests= specialRequests;
         this.userNumber= userNumber;
         this.status= status;
+        this.restaurantName = restaurantName;
     }
 }
 
@@ -93,7 +94,7 @@ public class TableReservation extends AppCompatActivity {
                 specialRequests= String.valueOf(specialRequestsEntry.getText());
 
                 userNumber= getIntent().getExtras().getString("user number");
-                Reservation reservation= new Reservation(numberOfPeople, reservationDate, reservationTime, specialRequests, userNumber, "pending");
+                Reservation reservation= new Reservation(numberOfPeople, reservationDate, reservationTime, specialRequests, userNumber, "pending", "Name");
                 myRef.child("Reservations").push().setValue(reservation);
                 alertDialog();
             }

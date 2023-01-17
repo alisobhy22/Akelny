@@ -93,9 +93,6 @@ public class Restaurants {
         });
     }
 
-    public void print() {
-
-    }
 
 }
 

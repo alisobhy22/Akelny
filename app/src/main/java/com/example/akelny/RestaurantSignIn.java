@@ -74,7 +74,8 @@ public class RestaurantSignIn extends AppCompatActivity {
                             if (task.getResult().exists()) {
                                 if (child.child("Account Password").getValue().toString().equals(restaurantPassword))
                                 {
-                                    Intent intent = new Intent(RestaurantSignIn.this, Homepage.class);
+                                    Intent intent = new Intent(RestaurantSignIn.this, Dashboard.class);
+                                    intent.putExtra("Signed_in", restaurantName); //pass restaurant that is signed in to dashboard
                                     startActivity(intent);
                                 }
                                 else
