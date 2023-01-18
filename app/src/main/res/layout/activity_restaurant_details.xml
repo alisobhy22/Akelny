@@ -24,7 +24,7 @@
             app:srcCompat="@drawable/logo" />
 
         <TextView
-            android:id="@+id/textView14"
+            android:id="@+id/restNameEntry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
@@ -127,7 +127,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/reserveBtn"
                 android:layout_width="214dp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#a8c987"

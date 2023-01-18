@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
@@ -43,6 +44,7 @@ public class TableReservation extends AppCompatActivity {
     EditText reservationDateEntry;
     EditText reservationTimeEntry;
     EditText specialRequestsEntry;
+    TextView restaurantName;
 
     String numberOfPeople, reservationDate, reservationTime, specialRequests, userNumber;
 
@@ -81,6 +83,7 @@ public class TableReservation extends AppCompatActivity {
         reservationDateEntry = (EditText) findViewById(R.id.editTextDate);
         reservationTimeEntry = (EditText) findViewById(R.id.editTextTime);
         specialRequestsEntry = (EditText) findViewById(R.id.editTextTextMultiLine);
+        restaurantName= (TextView) findViewById(R.id.textView);
 
         reserveBtn = (Button) findViewById(R.id.reserveBtn);
         cancelBtn = (Button) findViewById(R.id.cancelBtn);
@@ -94,7 +97,7 @@ public class TableReservation extends AppCompatActivity {
                 specialRequests= String.valueOf(specialRequestsEntry.getText());
 
                 userNumber= getIntent().getExtras().getString("user number");
-                Reservation reservation= new Reservation(numberOfPeople, reservationDate, reservationTime, specialRequests, userNumber, "pending", "Name");
+                Reservation reservation= new Reservation(numberOfPeople, reservationDate, reservationTime, specialRequests, userNumber, "pending", restaurantName.getText().toString());
                 myRef.child("Reservations").push().setValue(reservation);
                 alertDialog();
             }
