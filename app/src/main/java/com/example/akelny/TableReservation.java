@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -21,16 +22,19 @@ class Reservation{
     public String reservationDate;
     public String reservationTime;
     public String specialRequests;
+    public String order;
     public String status;
     public String userNumber;
     public String restaurantName;
 
-    public Reservation(String numberOfPeople, String reservationDate, String reservationTime, String specialRequests, String userNumber, String status,String restaurantName)
+    public Reservation(String numberOfPeople, String reservationDate, String reservationTime, String specialRequests,
+                       String order, String userNumber, String status,String restaurantName)
     {
         this.numberOfPeople= numberOfPeople;
         this.reservationDate= reservationDate;
         this.reservationTime= reservationTime;
         this.specialRequests= specialRequests;
+        this.order= order;
         this.userNumber= userNumber;
         this.status= status;
         this.restaurantName = restaurantName;
@@ -44,9 +48,10 @@ public class TableReservation extends AppCompatActivity {
     EditText reservationDateEntry;
     EditText reservationTimeEntry;
     EditText specialRequestsEntry;
+    EditText orderEntry;
     TextView restaurantName;
 
-    String numberOfPeople, reservationDate, reservationTime, specialRequests, userNumber;
+    String numberOfPeople, reservationDate, reservationTime, specialRequests, order, userNumber;
 
     Button reserveBtn;
     Button cancelBtn;
@@ -83,11 +88,13 @@ public class TableReservation extends AppCompatActivity {
         reservationDateEntry = (EditText) findViewById(R.id.editTextDate);
         reservationTimeEntry = (EditText) findViewById(R.id.editTextTime);
         specialRequestsEntry = (EditText) findViewById(R.id.editTextTextMultiLine);
+        orderEntry = (EditText) findViewById(R.id.orderEntry);
         restaurantName= (TextView) findViewById(R.id.textView);
 
         reserveBtn = (Button) findViewById(R.id.reserveBtn);
         cancelBtn = (Button) findViewById(R.id.cancelBtn);
-
+        ImageButton homeBtn;
+        ImageButton profileBtn;
         reserveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,9 +102,11 @@ public class TableReservation extends AppCompatActivity {
                 reservationDate = String.valueOf(reservationDateEntry.getText());
                 reservationTime= String.valueOf(reservationTimeEntry.getText());
                 specialRequests= String.valueOf(specialRequestsEntry.getText());
+                order= String.valueOf(orderEntry.getText());
 
                 userNumber= getIntent().getExtras().getString("user number");
-                Reservation reservation= new Reservation(numberOfPeople, reservationDate, reservationTime, specialRequests, userNumber, "pending", restaurantName.getText().toString());
+                Reservation reservation= new Reservation(numberOfPeople, reservationDate, reservationTime, specialRequests,
+                        order, userNumber, "pending", restaurantName.getText().toString());
                 myRef.child("Reservations").push().setValue(reservation);
                 alertDialog();
             }
@@ -107,6 +116,24 @@ public class TableReservation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(TableReservation.this, Homepage.class);
+                startActivity(intent);
+            }
+        });
+
+        homeBtn = (ImageButton) findViewById(R.id.imageButton);
+        profileBtn = (ImageButton) findViewById(R.id.imageButton2);
+        homeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(TableReservation.this, Homepage.class);
+                startActivity(intent);
+            }
+        });
+
+        profileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(TableReservation.this, MainActivity.class);
                 startActivity(intent);
             }
         });

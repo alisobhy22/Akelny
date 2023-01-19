@@ -92,14 +92,6 @@
             android:gravity="center"
             android:layout_marginBottom="40dp">
 
-            <ImageButton
-                android:id="@+id/imageButton2"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:adjustViewBounds="true"
-                android:backgroundTint="#00FFFFFF"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/profile" />
 
             <ImageButton
                 android:id="@+id/imageButton"
@@ -109,6 +101,15 @@
                 android:backgroundTint="#00FFFFFF"
                 android:scaleType="fitXY"
                 app:srcCompat="@drawable/home" />
+
+            <ImageButton
+                android:id="@+id/imageButton2"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:adjustViewBounds="true"
+                android:backgroundTint="#00FFFFFF"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/profile" />
         </LinearLayout>
     </LinearLayout>
 
