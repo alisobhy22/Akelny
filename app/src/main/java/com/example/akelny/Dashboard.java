@@ -17,7 +17,16 @@ import java.util.ArrayList;
 
 public class Dashboard extends AppCompatActivity {
 
-    public ArrayList<Reservation> reservations;
+    public ArrayList<Reservation> pending_reservations;
+    public ArrayList<Reservation> waiting_reservations;
+    public ArrayList<Reservation> accepted_reservations;
+    public pending_reservationAdaptor pend_res_adaptor;
+    public waiting_reservationAdaptor wait_res_adaptor;
+    public accepted_reservationAdaptor acc_res_adaptor;
+    ListView reservation_list;
+    ListView waiting_list_list;
+    ListView Accepted_reservations_list;
+
 
     public class pending_reservationAdaptor extends ArrayAdapter<Reservation>{
         public pending_reservationAdaptor(Context context,ArrayList<Reservation> reservations){
@@ -40,6 +49,11 @@ public class Dashboard extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.d("Accept Button","Clicked");
+                    pending_reservations.remove(reservation);
+                    reservation.status = "Ready";
+                    accepted_reservations.add(reservation);
+                    acc_res_adaptor.notifyDataSetChanged();
+                    notifyDataSetChanged();
                 }
             });
 
@@ -47,13 +61,22 @@ public class Dashboard extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.d("Decline Button","Clicked");
+                    pending_reservations.remove(reservation);
+                    reservation.status = "Canceled";
+                    notifyDataSetChanged();
                 }
+
             });
 
             waiting_list_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d("Waiting List Button","Clicked");
+                    pending_reservations.remove(reservation);
+                    reservation.status = "Waiting";
+                    waiting_reservations.add(reservation);
+                    wait_res_adaptor.notifyDataSetChanged();
+                    notifyDataSetChanged();
                 }
             });
 
@@ -83,6 +106,11 @@ public class Dashboard extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.d("Mark Ready","Clicked");
+                    waiting_reservations.remove(reservation);
+                    reservation.status = "Ready";
+                    accepted_reservations.add(reservation);
+                    notifyDataSetChanged();
+                    acc_res_adaptor.notifyDataSetChanged();
                 }
             });
 
@@ -90,6 +118,9 @@ public class Dashboard extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.d("Remove Button","Clicked");
+                    waiting_reservations.remove(reservation);
+                    reservation.status = "Canceled";
+                    notifyDataSetChanged();
                 }
             });
             return convertView;
@@ -116,15 +147,23 @@ public class Dashboard extends AppCompatActivity {
             Check_in_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("Mark Ready","Clicked");
+                    Log.d("Check in","Clicked");
+                    accepted_reservations.remove(reservation);
+                    reservation.status = "Finished";
+                    notifyDataSetChanged();
                 }
+
             });
 
             Cancel_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d("Cancel Button","Clicked");
+                    accepted_reservations.remove(reservation);
+                    reservation.status = "Canceled";
+                    notifyDataSetChanged();
                 }
+
             });
             return convertView;
         }
@@ -135,20 +174,21 @@ public class Dashboard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        reservations = create_reservations();
+        pending_reservations = create_reservations();
+        waiting_reservations = new ArrayList<Reservation>();
+        accepted_reservations = new ArrayList<Reservation>();
 
-        ListView reservation_list = (ListView) findViewById(R.id.reservations_list);
-        pending_reservationAdaptor pend_res_adaptor = new pending_reservationAdaptor(this,reservations);
+        reservation_list = (ListView) findViewById(R.id.reservations_list);
+        pend_res_adaptor = new pending_reservationAdaptor(this,pending_reservations);
         reservation_list.setAdapter(pend_res_adaptor);
 
-        ListView waiting_list_list = (ListView) findViewById(R.id.waiting_list_list);
-        waiting_reservationAdaptor wait_res_adaptor = new waiting_reservationAdaptor(this,reservations);
+        waiting_list_list = (ListView) findViewById(R.id.waiting_list_list);
+        wait_res_adaptor = new waiting_reservationAdaptor(this,waiting_reservations);
         waiting_list_list.setAdapter(wait_res_adaptor);
 
-        ListView Accepted_reservations_list = (ListView) findViewById(R.id.Accepted_reservations_list);
-        accepted_reservationAdaptor acc_res_adaptor = new accepted_reservationAdaptor(this,reservations);
+        Accepted_reservations_list = (ListView) findViewById(R.id.Accepted_reservations_list);
+        acc_res_adaptor = new accepted_reservationAdaptor(this,accepted_reservations);
         Accepted_reservations_list.setAdapter(acc_res_adaptor);
-
     }
 
 
