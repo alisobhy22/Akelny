@@ -59,6 +59,7 @@ public class Login extends AppCompatActivity {
 
         Users users = new Users();
 
+        final boolean[] success = {false};
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,7 +74,6 @@ public class Login extends AppCompatActivity {
                             if (task.getResult().exists()) {
                                 for (DataSnapshot child : task.getResult().getChildren()) {
                                     String userName = child.getValue().toString();
-
                                     String phoneNumber = child.child(number).getKey();
                                     System.out.println(phoneNumber);
                                     if (phoneNumber.equals(number) && userName.equals(username)) {
@@ -81,9 +81,7 @@ public class Login extends AppCompatActivity {
                                         intent.putExtra("user name", username);
                                         intent.putExtra("user number", number);
                                         startActivity(intent);
-                                        break;
-                                    }else
-                                        alertDialog();
+                                    }
                                 }
                             } else {
                                 alertDialog();
