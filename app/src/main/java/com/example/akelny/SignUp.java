@@ -111,9 +111,10 @@ public class SignUp extends AppCompatActivity {
 
                     //IntentFilter intentFilter = new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION);
                     //registerReceiver(smsVerificationReceiver, intentFilter);
-                    users.register(name, number);
-                    Intent intent= new Intent(SignUp.this, Login.class);
-                    //intent.putExtra("phone", number);
+
+                    Intent intent= new Intent(SignUp.this, CuisinePreferences.class);
+                    intent.putExtra("phone", number);
+                    intent.putExtra("name", name);
                     startActivity(intent);
                 }
                 else

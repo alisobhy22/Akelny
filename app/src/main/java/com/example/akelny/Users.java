@@ -71,9 +71,9 @@ public class Users {
         });
         return validated[0];
     }
-    public void register(String name, String phoneNum) {
+    public void register(String name, String phoneNum, ArrayList<String> cuisines) {
 
-            user userToRegister = new user(name, phoneNum, null);
+            user userToRegister = new user(name, phoneNum, cuisines);
             users.add(userToRegister);
             myRef.child("User").child(phoneNum).setValue(userToRegister);
 

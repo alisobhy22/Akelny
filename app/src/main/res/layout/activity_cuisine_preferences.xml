@@ -57,14 +57,38 @@
                 android:layout_height="wrap_content"
                 android:text="Japenese"
                 android:gravity="center"/>
+                <CheckBox
+                    android:id="@+id/checkBox3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Italian"
+                    android:gravity="center"/>
+                <CheckBox
+                    android:id="@+id/checkBox4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Egyptian"
+                    android:gravity="center"/>
+                <CheckBox
+                    android:id="@+id/checkBox5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mexican"
+                    android:gravity="center"/>
+                <CheckBox
+                    android:id="@+id/checkBox6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lebanese"
+                    android:gravity="center"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:layout_gravity="center"
-                android:layout_marginTop="250dp"
+                android:layout_marginTop="100dp"
                 >
                 <Button
                     android:id="@+id/button_done"
@@ -73,7 +97,17 @@
                     android:text="Done"
                     android:textColor="@color/black"
                     android:backgroundTint="#a8c987"
-                    android:fontFamily="casual"/>
+                    android:fontFamily="casual"
+                    android:layout_marginRight="10dp"/>
+                <Button
+                    android:id="@+id/button_skip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Skip"
+                    android:textColor="@color/black"
+                    android:backgroundTint="#a8c987"
+                    android:fontFamily="casual"
+                    android:layout_marginLeft="10dp"/>
             </LinearLayout>
 
 
