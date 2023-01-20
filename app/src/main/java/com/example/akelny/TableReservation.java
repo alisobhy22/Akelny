@@ -106,6 +106,9 @@ public class TableReservation extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_table_reservation);
+
+        //userName = getIntent().getExtras().getString("user name");
+
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
         numberOfPeopleEntry = (EditText) findViewById(R.id.editTextNumber);
@@ -158,6 +161,8 @@ public class TableReservation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(TableReservation.this, MainActivity.class);
+                //intent.putExtra("user name", userName);
+                intent.putExtra("user number", userNumber);
                 startActivity(intent);
             }
         });

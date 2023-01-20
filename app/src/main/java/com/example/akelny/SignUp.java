@@ -113,6 +113,7 @@ public class SignUp extends AppCompatActivity {
                     //registerReceiver(smsVerificationReceiver, intentFilter);
                     users.register(name, number);
                     Intent intent= new Intent(SignUp.this, Login.class);
+                    //intent.putExtra("phone", number);
                     startActivity(intent);
                 }
                 else

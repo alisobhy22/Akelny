@@ -25,10 +25,12 @@ public class Users {
     public static class user {
         public String name;
         public String phoneNum;
+        public ArrayList<String> favCuisines;
 
-        public user(String name, String Phone) {
+        public user(String name, String Phone, ArrayList<String> favCuisines) {
             this.name= name;
             this.phoneNum = Phone;
+            this.favCuisines= favCuisines;
         }
     }
     public Users() { // intialzing array
@@ -71,7 +73,7 @@ public class Users {
     }
     public void register(String name, String phoneNum) {
 
-            user userToRegister = new user(name, phoneNum);
+            user userToRegister = new user(name, phoneNum, null);
             users.add(userToRegister);
             myRef.child("User").child(phoneNum).setValue(userToRegister);
 

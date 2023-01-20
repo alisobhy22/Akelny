@@ -42,6 +42,8 @@ public class RestaurantDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(RestaurantDetails.this, MainActivity.class);
+                //intent.putExtra("user name", userName);
+                //intent.putExtra("user number", userNum);
                 startActivity(intent);
             }
         });
