@@ -70,14 +70,23 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (task.isSuccessful()) {
-
                             if (task.getResult().exists()) {
-                                Log.d("msg", "First");
-                                Intent intent = new Intent(Login.this, Homepage.class);
-                                intent.putExtra("user name", username);
-                                intent.putExtra("user number", number);
-                                startActivity(intent);
+                                for (DataSnapshot child : task.getResult().getChildren()) {
+                                    String userName = child.getValue().toString();
 
+                                    String phoneNumber = child.child(number).getKey();
+                                    System.out.println(phoneNumber);
+
+                                    if (phoneNumber.equals(number) && userName.equals(username)) {
+                                        Log.d("msg", "First");
+                                        Intent intent = new Intent(Login.this, Homepage.class);
+                                        intent.putExtra("user name", username);
+                                        intent.putExtra("user number", number);
+                                        startActivity(intent);
+                                    }
+                                    else
+                                        alertDialog();
+                                }
                             } else {
                                 alertDialog();
                             }

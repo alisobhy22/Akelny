@@ -4,12 +4,13 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.auth.api.phone.SmsRetriever;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -21,7 +22,7 @@ public class Users {
     public DatabaseReference myRef;
     public ArrayList<user> users;
     public boolean validated;
-    public class user {
+    public static class user {
         public String name;
         public String phoneNum;
 
@@ -45,6 +46,28 @@ public class Users {
 
 
         return validated;
+    }
+    public boolean validateLogin(String name, String number) {
+        final boolean[] validated = {false};
+        DatabaseReference userValidation = database.getReference("User");
+        userValidation.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        @Override
+        public void onComplete (@NonNull Task< DataSnapshot > task) {
+            if (task.isSuccessful()) {
+                for (DataSnapshot child : task.getResult().getChildren()) {
+                    String phoneNumber = child.getKey();
+                    String userName = child.child("name").getValue().toString();
+
+                    if (phoneNumber.equals(number) && userName.equals(name)) {
+                        validated[0]= true;
+                    }
+                }
+            } else {
+                Log.e("User validation", "Error fetching data: " + task.getException().getMessage());
+            }
+        }
+        });
+        return validated[0];
     }
     public void register(String name, String phoneNum) {
 
