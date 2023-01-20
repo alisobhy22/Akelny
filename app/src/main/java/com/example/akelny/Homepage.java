@@ -25,6 +25,9 @@ public class Homepage extends AppCompatActivity {
     ImageButton homeBtn;
     ImageButton profileBtn;
 
+    String userName;
+    String userNum;
+
     public void alertDialog() {
         AlertDialog.Builder dialog=new AlertDialog.Builder(this);
         String message;
@@ -49,6 +52,8 @@ public class Homepage extends AppCompatActivity {
         HomescreenAdapter adapter = new HomescreenAdapter(getApplicationContext(), namesList, cuisinesList, ratingsList);
         listView.setAdapter((ListAdapter) adapter);
 
+        userName = getIntent().getExtras().getString("user name");
+        userNum = getIntent().getExtras().getString("user number");
 
         signOutButton = (Button) findViewById(R.id.signoutbutton);
         signOutButton.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +90,10 @@ public class Homepage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(Homepage.this, MainActivity.class);
+                intent.putExtra("user name", userName);
+                intent.putExtra("user number", userNum);
                 startActivity(intent);
+
             }
         });
     }

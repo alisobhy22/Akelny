@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_marginTop="30dp"
         android:layout_gravity="center">
 
@@ -55,12 +55,39 @@
                 android:textColor="@color/black"
                 android:fontFamily="casual"
                 android:layout_marginBottom="5dp" />
+
+            <TextView
+                android:id="@+id/order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Order: "
+                android:textColor="@color/black"
+                android:fontFamily="casual"
+                android:layout_marginBottom="5dp" />
+
+            <TextView
+                android:id="@+id/specialRequests"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Special Requests: "
+                android:textColor="@color/black"
+                android:fontFamily="casual"
+                android:layout_marginBottom="5dp" />
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status: "
+                android:textColor="@color/black"
+                android:fontFamily="casual"
+                android:layout_marginBottom="5dp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/givefeedback"
@@ -72,7 +99,8 @@
                 android:backgroundTint="#a8c987"
                 tools:layout_editor_absoluteX="275dp"
                 tools:layout_editor_absoluteY="91dp"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"/>
 
             <Button
                 android:id="@+id/cancel"

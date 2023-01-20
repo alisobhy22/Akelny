@@ -1,6 +1,5 @@
 package com.example.akelny;
 
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +18,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import android.util.Log;
+import android.widget.TextView;
+
 import com.google.android.gms.tasks.Task;
 
 
@@ -26,11 +27,11 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    String namesList[] = {"Amy", "Menna"};
-    String datesList[] = {"Jan", "Feb"};
-    String timesList[] = {"10 AM", "9 AM"};
-    String numberOfPeople[] = {"3", "2"};
+    String userName;
+    String userNumber;
+    ArrayList<Reservation> reservationsList = getReservationsForAUser();
 
+    TextView textV;
     ListView listView;
     ImageButton homeBtn;
     ImageButton profileBtn;
@@ -55,11 +56,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        userName = getIntent().getExtras().getString("user name");
+        userNumber = getIntent().getExtras().getString("user number");
+
+        textV = (TextView) findViewById(R.id.textView);
+        textV.setText("Name: " + userName);
 
         listView = (ListView) findViewById(R.id.listview);
-        Adapter baseAdapter = new Adapter(getApplicationContext(), namesList, datesList, timesList, numberOfPeople);
+        Adapter baseAdapter = new Adapter(getApplicationContext(), reservationsList);
         listView.setAdapter(baseAdapter);
-
 
         homeBtn = (ImageButton) findViewById(R.id.imageButton);
         profileBtn = (ImageButton) findViewById(R.id.imageButton2);
@@ -67,10 +72,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Homepage.class);
+                intent.putExtra("user name", userName);
+                intent.putExtra("user number", userNumber);
                 startActivity(intent);
             }
         });
-
         profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void getReservationsForAUser() {
+    public ArrayList<Reservation> getReservationsForAUser() {
         ArrayList<Reservation> Reservations = new ArrayList<Reservation>();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reservation = database.getReference("Reservations");
@@ -97,16 +103,30 @@ public class MainActivity extends AppCompatActivity {
                         String userNumber = child.child("userNumber").getValue().toString();
                         String restaurantName = child.child("restaurantName").getValue().toString();
 
-                        Reservation reservation = new Reservation(numberOfPeople, reservationDate, reservationTime, specialRequests, order, status, userNumber, restaurantName);
+                        Reservation reservation = new Reservation(numberOfPeople, reservationDate, reservationTime, specialRequests, order, userNumber, status, restaurantName);
 
-                        if ((child.child("User Number").getValue().toString()) == "") {
+                        if ((child.child("userNumber").getValue().toString()).equals(userNumber)) {
                             Reservations.add(reservation);
                         }
                     }
                 } else {
                     Log.e("Reservation", "Error fetching data: " + task.getException().getMessage());
                 }
+                for (int i = 0; i < Reservations.size(); i++) {
+                    Log.d(
+                            "Reservation",
+                            "Name: " + Reservations.get(i).restaurantName +
+                                    ", Date: " + Reservations.get(i).reservationDate +
+                                    ", Time: " + Reservations.get(i).reservationTime +
+                                    ", Number of People: " + Reservations.get(i).numberOfPeople +
+                                    ", Special Requests: " +Reservations.get(i).specialRequests +
+                                    ", Order: " + Reservations.get(i).order +
+                                    ", Status: " + Reservations.get(i).status +
+                                    ", User Number: " + Reservations.get(i).userNumber);
+                }
             }
         });
+        return Reservations;
     }
+
 }

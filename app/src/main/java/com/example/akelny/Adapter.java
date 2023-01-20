@@ -7,27 +7,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class Adapter extends android.widget.BaseAdapter {
 
     Context context;
-    String namesList[];
-    String datesList[];
-    String timesList[];
-    String numberOfPeople[];
+    ArrayList<Reservation> reservationsList;
     LayoutInflater inflater;
 
-    public Adapter(Context context, String[] namesList, String[] datesList, String[] timesList, String[] numberOfPeople) {
-
+    public Adapter(Context context, ArrayList<Reservation> reservationsList) {
         this.context=context;
-        this.namesList=namesList;
-        this.datesList=datesList;
-        this.timesList=timesList;
-        this.numberOfPeople=numberOfPeople;
+        this.reservationsList=reservationsList;
         inflater=LayoutInflater.from(context);
     }
     @Override
     public int getCount() {
-        return namesList.length;
+        return reservationsList.size();
     }
 
     @Override
@@ -43,15 +38,25 @@ public class Adapter extends android.widget.BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         view = inflater.inflate(R.layout.activity_reservations, null);
+
+        System.out.println("I LOVE MENNA");
+
         TextView restaurantName = (TextView) view.findViewById(R.id.name);
         TextView date = (TextView) view.findViewById(R.id.date);
         TextView time = (TextView) view.findViewById(R.id.time);
         TextView people = (TextView) view.findViewById(R.id.numOfPeople);
+        TextView order = (TextView) view.findViewById(R.id.order);
+        TextView specialRequests = (TextView) view.findViewById(R.id.specialRequests);
+        TextView status = (TextView) view.findViewById(R.id.status);
 
-        restaurantName.setText(namesList[i]);
-        date.setText(datesList[i]);
-        time.setText(timesList[i]);
-        people.setText(numberOfPeople[i]);
+        restaurantName.setText("Restaurant Name: " + reservationsList.get(i).restaurantName);
+        date.setText("Reservation Date: " + reservationsList.get(i).reservationDate);
+        time.setText("Reservation Time: " + reservationsList.get(i).reservationTime);
+        people.setText("Number of people: " + reservationsList.get(i).numberOfPeople);
+        order.setText("Order: " + reservationsList.get(i).order);
+        specialRequests.setText("Special Requests: " + reservationsList.get(i).specialRequests);
+        status.setText("Status: " + reservationsList.get(i).status);
+
         return view;
     }
 }

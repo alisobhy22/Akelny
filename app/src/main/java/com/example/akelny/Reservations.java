@@ -44,12 +44,12 @@ public class Reservations extends AppCompatActivity {
 
         return (currentDate.compareTo(appointmentDate));
     }
-    int checkIfTimePassed(int appointmentHour, int appointmentMin, int appointmentSec) {
-        LocalTime currentTime, appointmentTime;
-        currentTime = java.time.LocalTime.now();
-        appointmentTime = LocalTime.of(appointmentHour, appointmentMin, appointmentSec);
-        return currentTime.compareTo(appointmentTime);
-    }
+//    int checkIfTimePassed(int appointmentHour, int appointmentMin, int appointmentSec) {
+//        LocalTime currentTime, appointmentTime;
+//        currentTime = java.time.LocalTime.now();
+//        appointmentTime = LocalTime.of(appointmentHour, appointmentMin, appointmentSec);
+//        return currentTime.compareTo(appointmentTime);
+//    }
 
     Boolean ifCanGiveFeedback(String appointmentDateString, int appointmentHour, int appointmentMin, int appointmentSec) {
         int dateResult = checkIfDatePassed(appointmentDateString);
@@ -57,15 +57,16 @@ public class Reservations extends AppCompatActivity {
             return true; //user can give feedback
         else if(dateResult<0) //currentDate occurs before appointmentDate
             return false; //user can cancel the appointment
-        else //Both dates are equal, so comapare time
-        {
-            int timeResult = checkIfTimePassed(appointmentHour, appointmentMin, appointmentSec);
-            if (timeResult>0) //currentTime occurs after appointmentTime
-                return true; //user can give feedback
-            else if(timeResult<0) //currentTime occurs before appointmentTime
-                return false; //user can cancel the appointment
-            else //Both times are equal
-        }
+//        else //Both dates are equal, so comapare time
+//        {
+//            int timeResult = checkIfTimePassed(appointmentHour, appointmentMin, appointmentSec);
+//            if (timeResult>0) //currentTime occurs after appointmentTime
+//                return true; //user can give feedback
+//            else if(timeResult<0) //currentTime occurs before appointmentTime
+//                return false; //user can cancel the appointment
+//            else //Both times are equal
+//        }
+        return false;
     }
 
     Button giveFeedback, cancel;
@@ -78,31 +79,27 @@ public class Reservations extends AppCompatActivity {
         giveFeedback = findViewById(R.id.givefeedback);
         cancel = findViewById(R.id.cancel);
 
-        boolean feedbackResult = ifCanGiveFeedback();
+        //boolean feedbackResult = ifCanGiveFeedback();
 
-        giveFeedback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(feedbackResult)
-                {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Feedback Form");
-                    builder.setMessage("Please give us your feedback for the appointment.");
-                    builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                        }
-                    });
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                }
-                else
-
-
-
-
-            }
-        });
+        // giveFeedback.setOnClickListener(new View.OnClickListener() {
+        //   @Override
+//            public void onClick(View v) {
+//                if(feedbackResult)
+//                {
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//                    builder.setTitle("Feedback Form");
+//                    builder.setMessage("Please give us your feedback for the appointment.");
+//                    builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//                        }
+//                    });
+//                    AlertDialog alertDialog = builder.create();
+//                    alertDialog.show();
+//                }
+//                else
+        //  }
+        //});
     }
 }
 
