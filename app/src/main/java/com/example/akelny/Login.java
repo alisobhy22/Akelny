@@ -79,7 +79,7 @@ public class Login extends AppCompatActivity {
 
                                     if (phoneNumber.equals(number) && userName.equals(username)) {
                                         Log.d("msg", "First");
-                                        Intent intent = new Intent(Login.this, Homepage.class);
+                                        Intent intent = new Intent(Login.this, TableReservation.class);
                                         intent.putExtra("user name", username);
                                         intent.putExtra("user number", number);
                                         startActivity(intent);

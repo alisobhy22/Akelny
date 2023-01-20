@@ -5,13 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +29,7 @@ class Reservation{
     public String status;
     public String userNumber;
     public String restaurantName;
+    public String feedback= "";
 
     public Reservation(String numberOfPeople, String reservationDate, String reservationTime, String specialRequests,
                        String order, String userNumber, String status,String restaurantName)
@@ -76,6 +80,26 @@ public class TableReservation extends AppCompatActivity {
 
         AlertDialog alertDialog=dialog.create();
         alertDialog.show();
+    }
+    protected void sendSMS(String phoneNumber, String message) {
+        /*Log.i("Send SMS", "");
+        Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+
+        smsIntent.setData(Uri.parse("smsto:"));
+        smsIntent.setType("vnd.android-dir/mms-sms");
+        smsIntent.putExtra("address"  , new String ("5551212"));
+        smsIntent.putExtra("sms_body"  , "Test ");
+
+        try {
+            startActivity(smsIntent);
+            finish();
+            Log.i("Finished sending SMS...", "");
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(TableReservation.this,
+                    "SMS faild, please try again later.", Toast.LENGTH_SHORT).show();
+        }
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(phoneNumber, null, message, null, null);*/
     }
 
     @Override

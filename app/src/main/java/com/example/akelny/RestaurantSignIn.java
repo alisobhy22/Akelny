@@ -93,5 +93,12 @@ public class RestaurantSignIn extends AppCompatActivity {
             }
         });
 
+        goToUserLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RestaurantSignIn.this, Login.class);
+                startActivity(intent);
+            }
+        });
     }
 }
