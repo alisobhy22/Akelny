@@ -2,10 +2,16 @@ package com.example.akelny;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -102,12 +108,15 @@ public class TableReservation extends AppCompatActivity {
         smsManager.sendTextMessage(phoneNumber, null, message, null, null);*/
     }
 
+    String restName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_table_reservation);
 
         //userName = getIntent().getExtras().getString("user name");
+
+
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
@@ -117,11 +126,23 @@ public class TableReservation extends AppCompatActivity {
         specialRequestsEntry = (EditText) findViewById(R.id.editTextTextMultiLine);
         orderEntry = (EditText) findViewById(R.id.orderEntry);
         restaurantName= (TextView) findViewById(R.id.textView);
+        restName= getIntent().getExtras().getString("Restaurant name");
+        if (restName==null)
+            restaurantName.setText("Restaurant name");
+        else
+            restaurantName.setText(restName);
 
         reserveBtn = (Button) findViewById(R.id.reserveBtn);
         cancelBtn = (Button) findViewById(R.id.cancelBtn);
         ImageButton homeBtn;
         ImageButton profileBtn;
+
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)
+        {
+            NotificationChannel channel= new NotificationChannel("My notification", "My notification", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager= getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
         reserveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,6 +156,15 @@ public class TableReservation extends AppCompatActivity {
                 Reservation reservation= new Reservation(numberOfPeople, reservationDate, reservationTime, specialRequests,
                         order, userNumber, "pending", restaurantName.getText().toString());
                 myRef.child("Reservations").push().setValue(reservation);
+
+                System.out.println("HIII");
+                NotificationCompat.Builder builder= new NotificationCompat.Builder(TableReservation.this, "Reserved");
+                builder.setContentTitle("Reservation is confirmed");
+                builder.setSmallIcon(R.drawable.request);
+                builder.setAutoCancel(true);
+                NotificationManagerCompat managerCompat=NotificationManagerCompat.from(TableReservation.this);
+                managerCompat.notify(1, builder.build());
+                System.out.println("HIIIIII");
                 alertDialog();
             }
         });
