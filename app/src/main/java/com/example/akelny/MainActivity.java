@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -63,10 +64,12 @@ public class MainActivity extends AppCompatActivity {
         textV = (TextView) findViewById(R.id.textView);
         textV.setText("Name: " + userName);
 
+        AppCompatActivity thisActivity = this;
+
         listView = (ListView) findViewById(R.id.listview);
-        Adapter baseAdapter = new Adapter(getApplicationContext(), reservationsList);
-        listView.setAdapter(baseAdapter);
-        System.out.println(baseAdapter);
+        Adapter baseAdapter = new Adapter(thisActivity, reservationsList);
+        listView.setAdapter((ListAdapter) baseAdapter);
+        //System.out.println(baseAdapter);
 
         homeBtn = (ImageButton) findViewById(R.id.imageButton);
         profileBtn = (ImageButton) findViewById(R.id.imageButton2);
@@ -96,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DataSnapshot child : task.getResult().getChildren()) {
+                        String uniqueId = reservation.push().getKey();
                         String numberOfPeople = child.child("numberOfPeople").getValue().toString();
                         String reservationDate = child.child("reservationDate").getValue().toString();
                         String reservationTime = child.child("reservationTime").getValue().toString();
@@ -105,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                         String userNumber = child.child("userNumber").getValue().toString();
                         String restaurantName = child.child("restaurantName").getValue().toString();
 
-                        Reservation reservation = new Reservation(numberOfPeople, reservationDate, reservationTime, specialRequests, order, userNumber, status, restaurantName);
+                        Reservation reservation = new Reservation(uniqueId, numberOfPeople, reservationDate, reservationTime, specialRequests, order, userNumber, status, restaurantName);
 
                         if ((child.child("userNumber").getValue().toString()).equals(userNumber)) {
                             Reservations.add(reservation);
@@ -116,8 +120,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 for (int i = 0; i < Reservations.size(); i++) {
                     Log.d(
-                            "Reservation",
-                            "Name: " + Reservations.get(i).restaurantName +
+                            "Reservation\n",
+                            "Reservation ID: " + Reservations.get(i).uniqueId +
+                            ", Name: " + Reservations.get(i).restaurantName +
                                     ", Date: " + Reservations.get(i).reservationDate +
                                     ", Time: " + Reservations.get(i).reservationTime +
                                     ", Number of People: " + Reservations.get(i).numberOfPeople +

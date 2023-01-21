@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 class Reservation{
+    public String uniqueId;
     public String numberOfPeople;
     public String reservationDate;
     public String reservationTime;
@@ -37,9 +38,10 @@ class Reservation{
     public String restaurantName;
     public String feedback= "";
 
-    public Reservation(String numberOfPeople, String reservationDate, String reservationTime, String specialRequests,
+    public Reservation(String uniqueId, String numberOfPeople, String reservationDate, String reservationTime, String specialRequests,
                        String order, String userNumber, String status,String restaurantName)
     {
+        this.uniqueId=uniqueId;
         this.numberOfPeople= numberOfPeople;
         this.reservationDate= reservationDate;
         this.reservationTime= reservationTime;
@@ -175,7 +177,7 @@ public class TableReservation extends AppCompatActivity {
                 {
                     alertDialogCantReserve();
                 }else {
-                    Reservation reservation= new Reservation(numberOfPeople, reservationDate, reservationTime, specialRequests,
+                    Reservation reservation= new Reservation(" ",numberOfPeople, reservationDate, reservationTime, specialRequests,
                             order, userNumber, "pending", restaurantName.getText().toString());
                     myRef.child("Reservations").push().setValue(reservation);
                 }

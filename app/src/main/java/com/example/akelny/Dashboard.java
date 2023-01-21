@@ -198,7 +198,7 @@ public class Dashboard extends AppCompatActivity {
 
         for(int i = 0; i < 10; i++)
         {
-            Reservation r = new Reservation(Integer.toString(i),"1/18/2023",Integer.toString(i) +
+            Reservation r = new Reservation("", Integer.toString(i),"1/18/2023",Integer.toString(i) +
                     ":00 PM",Integer.toString(i), "pasta", "01060188396","Pending","Crave");
             reservations.add(r);
         }
