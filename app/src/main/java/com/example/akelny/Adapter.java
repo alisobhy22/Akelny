@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 
 public class Adapter extends android.widget.BaseAdapter {
@@ -37,6 +39,8 @@ public class Adapter extends android.widget.BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        System.out.println("I LOVE MENNA");
+
         view = inflater.inflate(R.layout.activity_reservations, null);
 
         System.out.println("I LOVE MENNA");

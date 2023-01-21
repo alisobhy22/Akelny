@@ -26,33 +26,62 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
+
 
 
 public class RestaurantDetails extends AppCompatActivity {
 
-    Button reserveBtn;
     ImageButton homeBtn;
     ImageButton profileBtn;
+    Button reserveBtn;
+
+    TextView addressText;
+    TextView cuisineText;
+    TextView ratingText;
+    TextView menuText;
+    TextView WHText;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_details);
-        reserveBtn= findViewById(R.id.reserveBtn);
-        ImageButton homeBtn;
-        ImageButton profileBtn;
-
         String resturantName = getIntent().getExtras().getString("Restaurant Name");
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        String userName = getIntent().getExtras().getString("user name");
+        String userNumber = getIntent().getExtras().getString("user number");
 
-        reserveBtn.setOnClickListener(new View.OnClickListener() {
+        addressText= (TextView) findViewById(R.id.textViewA);
+        cuisineText= (TextView) findViewById(R.id.textViewB);
+        ratingText= (TextView) findViewById(R.id.textViewC);
+        menuText= (TextView) findViewById(R.id.textViewD);
+        WHText= (TextView) findViewById(R.id.textViewE);
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        homeBtn     = (ImageButton) findViewById(R.id.imageButton);
+        profileBtn  = (ImageButton) findViewById(R.id.imageButton2);
+        reserveBtn= (Button) findViewById(R.id.reserveBtn);
+        homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(RestaurantDetails.this, TableReservation.class);
-                intent.putExtra("Restaurant name", resturantName);
+                Intent intent= new Intent(RestaurantDetails.this, Homepage.class);
+                intent.putExtra("user name", userName);
+                intent.putExtra("user number", userNumber);
                 startActivity(intent);
             }
         });
+
+        profileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(RestaurantDetails.this, MainActivity.class);
+                intent.putExtra("user name", userName);
+                intent.putExtra("user number", userNumber);
+                startActivity(intent);
+            }
+        });
+
+
         DatabaseReference rest = database.getReference("Restaurants");
         rest.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -65,7 +94,7 @@ public class RestaurantDetails extends AppCompatActivity {
                             String address = child.child("Address").getValue().toString();
                             String menuURL = child.child("Menu URL").getValue().toString();
                             String workingHours = child.child("Working hours").getValue().toString();
-                            //String image = child.child("Image").getValue().toString();
+                            String image = child.child("Image").getValue().toString();
                             String cuisine = child.child("Cuisine").getValue().toString();
 
 
@@ -73,8 +102,8 @@ public class RestaurantDetails extends AppCompatActivity {
                             addressTV.setText(address);
                             TextView RestTV= findViewById(R.id.restNameEntry);
                             RestTV.setText(Name);
-                            //ImageView imageView=findViewById(R.id.imageView);
-                            //FIXME: Find a way to display the image into the imageView
+                            ImageView imageView=findViewById(R.id.imageView);
+                            // FIXME: Find a way to display the image into the imageView
                             TextView textView2=findViewById(R.id.textView16);
                             textView2.setText(cuisine);
                             TextView textView3=findViewById(R.id.textView17);
@@ -85,7 +114,7 @@ public class RestaurantDetails extends AppCompatActivity {
 
                             TextView textView5=findViewById(R.id.textView18);
                             textView5.setText(workingHours);
-                            System.out.println(rating + address + menuURL + workingHours + cuisine);
+
                             break;
                         }
                     }
@@ -97,25 +126,15 @@ public class RestaurantDetails extends AppCompatActivity {
                 }
             }
         });
-
-        homeBtn = (ImageButton) findViewById(R.id.imageButton);
-        profileBtn = (ImageButton) findViewById(R.id.imageButton2);
-        homeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent= new Intent(RestaurantDetails.this, Homepage.class);
-                startActivity(intent);
-            }
-        });
-
-        profileBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent= new Intent(RestaurantDetails.this, MainActivity.class);
-                //intent.putExtra("user name", userName);
-                //intent.putExtra("user number", userNum);
-                startActivity(intent);
-            }
-        });
+       reserveBtn.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               Intent intent= new Intent(RestaurantDetails.this, TableReservation.class);
+               intent.putExtra("user name", userName);
+               intent.putExtra("user number", userNumber);
+               intent.putExtra("Restaurant name", resturantName);
+               startActivity(intent);
+           }
+       });
     }
-}
+    }

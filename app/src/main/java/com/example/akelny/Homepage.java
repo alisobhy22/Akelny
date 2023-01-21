@@ -8,12 +8,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.SearchEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,7 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-
+import java.util.Locale;
 
 public class Homepage extends AppCompatActivity {
 
@@ -101,11 +104,64 @@ public class Homepage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+        userName = getIntent().getExtras().getString("user name");
+        userNum = getIntent().getExtras().getString("user number");
+        AppCompatActivity thisActivity = this;
 
         listView = (ListView) findViewById(R.id.listview);
+        SearchView searchView = findViewById(R.id.SearchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (query.isEmpty())
+                {
+                    HomescreenAdapter adapter = new HomescreenAdapter(thisActivity, Restaurants, userName, userNum);
+                    listView.setAdapter((ListAdapter) adapter);
+                    return true;
+                }
+                ArrayList<Restaurant> finalList = new ArrayList<>();
+                query = query.toLowerCase(Locale.ROOT);
 
+                for (Restaurant res : Restaurants)
+                {
+                    String cuisine = res.getCuisine();
+                    cuisine = cuisine.toLowerCase(Locale.ROOT);
+                    if (cuisine.contains(query))
+                    {
+                        finalList.add(res);
+                    }
+                }
+                HomescreenAdapter adapter = new HomescreenAdapter(thisActivity, finalList, userName, userNum);
+                listView.setAdapter((ListAdapter) adapter);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty())
+                {
+                    HomescreenAdapter adapter = new HomescreenAdapter(thisActivity, Restaurants, userName, userNum);
+                    listView.setAdapter((ListAdapter) adapter);
+                    return true;
+                }
+                newText = newText.toLowerCase(Locale.ROOT);
+                ArrayList<Restaurant> finalList = new ArrayList<>();
+                for (Restaurant res : Restaurants)
+                {
+                    String cuisine = res.getCuisine();
+                    cuisine = cuisine.toLowerCase(Locale.ROOT);
+                    if (cuisine.contains(newText))
+                    {
+                        finalList.add(res);
+                    }
+                }
+                HomescreenAdapter adapter = new HomescreenAdapter(thisActivity, finalList, userName, userNum);
+                listView.setAdapter((ListAdapter) adapter);
+                return true;
+            }
+        });
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        AppCompatActivity thisActivity = this;
+
         DatabaseReference rest = database.getReference("Restaurants");
         rest.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -120,7 +176,7 @@ public class Homepage extends AppCompatActivity {
                         System.out.println("Found restaurant: " + restaurant.getName());
                     }
 
-                    HomescreenAdapter adapter = new HomescreenAdapter(thisActivity,Restaurants);
+                    HomescreenAdapter adapter = new HomescreenAdapter(thisActivity,Restaurants, userName, userNum);
                     listView.setAdapter((ListAdapter) adapter);
                 } else {
                     Log.e("Restaurant", "Error fetching data: " + task.getException().getMessage());
@@ -129,9 +185,7 @@ public class Homepage extends AppCompatActivity {
             }
         });
 
-        // FIXME: We need to send the user name and number from the last layer (Activity)
-//        userName = getIntent().getExtras().getString("user name");
-//        userNum = getIntent().getExtras().getString("user number");
+
 
         signOutButton = (Button) findViewById(R.id.signoutbutton);
         signOutButton.setOnClickListener(new View.OnClickListener() {
@@ -146,28 +200,35 @@ public class Homepage extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(Homepage.this, RestaurantDetails.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("Restaurant Name", Restaurants.get(i).Name);
-                bundle.putString("Restaurant Cuisine", Restaurants.get(i).Cuisine);
-                bundle.putFloat("Restaurant Rating", Restaurants.get(i).rating);
-                intent.putExtras(bundle);
+                //Bundle bundle = new Bundle();
+                //bundle.putString("Restaurant Name", Restaurants.get(i).Name);
+                //bundle.putString("Restaurant Cuisine", Restaurants.get(i).Cuisine);
+                //bundle.putFloat("Restaurant Rating", Restaurants.get(i).rating);
+                intent.putExtra("Restaurant Name", Restaurants.get(i).Name);
+                intent.putExtra("Restaurant Cuisine", Restaurants.get(i).Cuisine);
+                intent.putExtra("Restaurant Rating", Restaurants.get(i).rating);
+                intent.putExtra("user name", userName);
+                intent.putExtra("user number", userNum);
+                System.out.println("yarab teshta3'al "+userName);
+                //intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
 
-        homeBtn = (ImageButton) findViewById(R.id.imageButton);
-        profileBtn = (ImageButton) findViewById(R.id.imageButton2);
+        /*homeBtn = (ImageButton) findViewById(R.id.imageButton);
         homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alertDialog();
+               alertDialog();
             }
-        });
+        });*/
 
+        profileBtn = (ImageButton) findViewById(R.id.imageButton2);
         profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(Homepage.this, MainActivity.class);
+                Intent intent = new Intent(Homepage.this, MainActivity.class);
+                System.out.println("user naaamme" + userName);
                 intent.putExtra("user name", userName);
                 intent.putExtra("user number", userNum);
                 startActivity(intent);

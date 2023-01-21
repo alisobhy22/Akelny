@@ -66,6 +66,7 @@ public class TableReservation extends AppCompatActivity {
     Button reserveBtn;
     Button cancelBtn;
 
+    String userName;
     public DatabaseReference myRef;
     public FirebaseDatabase database;
 
@@ -80,7 +81,26 @@ public class TableReservation extends AppCompatActivity {
                     public void onClick(DialogInterface dialog,
                                         int which) {
                         Intent intent= new Intent(TableReservation.this, Homepage.class);
+                        intent.putExtra("user name", userName);
+                        intent.putExtra("user number", userNumber);
                         startActivity(intent);
+                    }
+                });
+
+        AlertDialog alertDialog=dialog.create();
+        alertDialog.show();
+    }
+
+    public void alertDialogCantReserve() {
+        AlertDialog.Builder dialog=new AlertDialog.Builder(this);
+        String message;
+        message= "Please enter the number of people, reservation date and time";
+        dialog.setMessage(message);
+        dialog.setTitle("Cannot proceed with reservation");
+        dialog.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
                     }
                 });
 
@@ -114,9 +134,8 @@ public class TableReservation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_table_reservation);
 
-        //userName = getIntent().getExtras().getString("user name");
-
-
+        userName = getIntent().getExtras().getString("user name");
+        userNumber= getIntent().getExtras().getString("user number");
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
@@ -152,10 +171,15 @@ public class TableReservation extends AppCompatActivity {
                 specialRequests= String.valueOf(specialRequestsEntry.getText());
                 order= String.valueOf(orderEntry.getText());
 
-                userNumber= getIntent().getExtras().getString("user number");
-                Reservation reservation= new Reservation(numberOfPeople, reservationDate, reservationTime, specialRequests,
-                        order, userNumber, "pending", restaurantName.getText().toString());
-                myRef.child("Reservations").push().setValue(reservation);
+                if (numberOfPeople.equals("") || reservationDate.equals("")|| reservationTime.equals(""))
+                {
+                    alertDialogCantReserve();
+                }else {
+                    Reservation reservation= new Reservation(numberOfPeople, reservationDate, reservationTime, specialRequests,
+                            order, userNumber, "pending", restaurantName.getText().toString());
+                    myRef.child("Reservations").push().setValue(reservation);
+                }
+
 
                 System.out.println("HIII");
                 NotificationCompat.Builder builder= new NotificationCompat.Builder(TableReservation.this, "Reserved");
@@ -165,7 +189,10 @@ public class TableReservation extends AppCompatActivity {
                 NotificationManagerCompat managerCompat=NotificationManagerCompat.from(TableReservation.this);
                 managerCompat.notify(1, builder.build());
                 System.out.println("HIIIIII");
-                alertDialog();
+                if (!(numberOfPeople.equals("")) || !(reservationDate.equals("")) || !(reservationTime.equals("")))
+                {
+                    alertDialog();
+                }
             }
         });
 
@@ -173,6 +200,8 @@ public class TableReservation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(TableReservation.this, Homepage.class);
+                intent.putExtra("user name", userName);
+                intent.putExtra("user number", userNumber);
                 startActivity(intent);
             }
         });
@@ -183,6 +212,8 @@ public class TableReservation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(TableReservation.this, Homepage.class);
+                intent.putExtra("user name", userName);
+                intent.putExtra("user number", userNumber);
                 startActivity(intent);
             }
         });
@@ -191,7 +222,7 @@ public class TableReservation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(TableReservation.this, MainActivity.class);
-                //intent.putExtra("user name", userName);
+                intent.putExtra("user name", userName);
                 intent.putExtra("user number", userNumber);
                 startActivity(intent);
             }

@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         userName = getIntent().getExtras().getString("user name");
         userNumber = getIntent().getExtras().getString("user number");
+        System.out.println(userName + userNumber);
 
         textV = (TextView) findViewById(R.id.textView);
         textV.setText("Name: " + userName);
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listview);
         Adapter baseAdapter = new Adapter(getApplicationContext(), reservationsList);
         listView.setAdapter(baseAdapter);
+        System.out.println(baseAdapter);
 
         homeBtn = (ImageButton) findViewById(R.id.imageButton);
         profileBtn = (ImageButton) findViewById(R.id.imageButton2);

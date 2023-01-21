@@ -16,7 +16,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="39"
+            android:layout_weight="35"
             android:orientation="vertical">
 
             <Button
@@ -24,10 +24,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:text="Sign out"
-                android:textColor="@color/black"
+                android:backgroundTint="#a8c987"
                 android:fontFamily="casual"
-                android:backgroundTint="#a8c987" />
+                android:text="Sign out"
+                android:textColor="@color/black" />
         </LinearLayout>
 
         <LinearLayout
@@ -55,19 +55,12 @@
                 android:textStyle="bold"
                 android:layout_marginRight="40dp"/>
 
-            <SearchView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="2">
-
-            </SearchView>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="20"
+            android:layout_weight="15"
             android:orientation="vertical">
 
             <ListView
@@ -80,43 +73,55 @@
             </ListView>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            android:layout_weight="35"
-            android:orientation="horizontal">
+        <!--        <LinearLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:layout_gravity="center_horizontal"-->
+        <!--            android:gravity="center_horizontal"-->
+        <!--            android:layout_weight="35"-->
+        <!--            android:orientation="horizontal">-->
 
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:adjustViewBounds="true"
-                android:backgroundTint="#00FFFFFF"
-                android:scaleType="fitXY"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.279"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0"
-                app:srcCompat="@drawable/home" />
+
+
+        <!--        </LinearLayout>-->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
 
             <ImageButton
                 android:id="@+id/imageButton2"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:layout_gravity="center"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
                 android:scaleType="fitXY"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.717"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0"
-                app:srcCompat="@drawable/profile" />
+
+                app:srcCompat="@drawable/profile"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <!--        <ImageButton-->
+            <!--            android:id="@+id/imageButton"-->
+            <!--            android:layout_width="60dp"-->
+            <!--            android:layout_height="60dp"-->
+            <!--            android:layout_gravity="center"-->
+            <!--            android:adjustViewBounds="true"-->
+            <!--            android:backgroundTint="#00FFFFFF"-->
+            <!--            android:scaleType="fitXY"-->
+
+            <!--            app:srcCompat="@drawable/home"-->
+            <!--            tools:ignore="SpeakableTextPresentCheck" />-->
+
+            <SearchView
+                android:id="@+id/SearchView"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:queryHint="Search by cuisine" />
+
         </LinearLayout>
 
     </LinearLayout>
