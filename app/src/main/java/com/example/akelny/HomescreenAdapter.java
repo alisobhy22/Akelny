@@ -61,7 +61,7 @@ public class HomescreenAdapter extends android.widget.BaseAdapter {
 
         restaurantName.setText(Restaurants.get(i).getName());
         cuisine.setText(Restaurants.get(i).getCuisine());
-        rating.setText(Float.toString(Restaurants.get(i).getRating()));
+        rating.setText("⭐ "+ Float.toString(Restaurants.get(i).getRating()));
         imgUrl= Restaurants.get(i).getImgUrl();
 
         Picasso.get().load(imgUrl).resize(150, 150).into(restaurantImg);
