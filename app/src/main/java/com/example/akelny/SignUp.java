@@ -2,6 +2,8 @@ package com.example.akelny;
 
 import static android.graphics.BlendMode.COLOR;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -29,8 +31,14 @@ import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -38,12 +46,13 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public class SignUp extends AppCompatActivity {
 
-    private static final int RC_SIGN_IN = 123;
     TextInputEditText nameEntry;
     EditText numberEntry;
 
@@ -54,47 +63,28 @@ public class SignUp extends AppCompatActivity {
     Button registerButton;
     Button goToSignInBtn;
 
-    private static final int SMS_CONSENT_REQUEST = 2;  // Set to an unused request code
-    private final BroadcastReceiver smsVerificationReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (SmsRetriever.SMS_RETRIEVED_ACTION.equals(intent.getAction())) {
-                Bundle extras = intent.getExtras();
-                Status smsRetrieverStatus = (Status) extras.get(SmsRetriever.EXTRA_STATUS);
 
-                switch (smsRetrieverStatus.getStatusCode()) {
-                    case CommonStatusCodes.SUCCESS:
-                        // Get consent intent
-                        Intent consentIntent = extras.getParcelable(SmsRetriever.EXTRA_CONSENT_INTENT);
-                        try {
-                            // Start activity to show consent dialog to user, activity must be started in
-                            // 5 minutes, otherwise you'll receive another TIMEOUT intent
-                            startActivityForResult(consentIntent, SMS_CONSENT_REQUEST);
-                        } catch (ActivityNotFoundException e) {
-                            // Handle the exception ...
-                        }
-                        break;
-                    case CommonStatusCodes.TIMEOUT:
-                        // Time out occurred, handle the error.
-                        break;
-                }
-            }
-        }
-    };
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        String verified_number = getIntent().getExtras().getString("number");
+
+
+
+
 
         //IntentFilter intentFilter = new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION);
 
         nameEntry = (TextInputEditText) findViewById(R.id.nameEntry);
-        numberEntry = (EditText) findViewById(R.id.numberEntry);
+        //numberEntry = (EditText) findViewById(R.id.numberEntry);
 
 
         registerButton = (Button) findViewById(R.id.registerButton);
-        goToSignInBtn = (Button) findViewById(R.id.goToSignInBtn);
+        //goToSignInBtn = (Button) findViewById(R.id.goToSignInBtn);
 
         users = new Users();
 
@@ -102,26 +92,29 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 name = String.valueOf(nameEntry.getText());
-                number = String.valueOf(numberEntry.getText());
+                //number = String.valueOf(numberEntry.getText());
                 int checkRegisterReturn;
 
-                if (users.validateNumber(number))
-                {
+
+
+
+
+
+
+                            Intent intent= new Intent(SignUp.this, CuisinePreferences.class);
+                            intent.putExtra("phone",verified_number);
+                            intent.putExtra("name", name);
+                            startActivity(intent);
+
+
                     //Task<Void> task = SmsRetriever.getClient(getApplicationContext()).startSmsUserConsent(null);
 
                     //IntentFilter intentFilter = new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION);
                     //registerReceiver(smsVerificationReceiver, intentFilter);
 
-                    Intent intent= new Intent(SignUp.this, CuisinePreferences.class);
-                    intent.putExtra("phone", number);
-                    intent.putExtra("name", name);
-                    startActivity(intent);
-                }
-                else
-                {
-                    numberEntry.setHint("Phone number is incorrect");
-                    numberEntry.setHintTextColor(Integer.parseInt("FF0000", 16));
-                }
+
+
+
                 /*checkRegisterReturn= users.register(name, number);
                 if (checkRegisterReturn==0)
                 {
@@ -140,13 +133,10 @@ public class SignUp extends AppCompatActivity {
             }
         });
 
-        goToSignInBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent= new Intent(SignUp.this, Login.class);
-                startActivity(intent);
-            }
-        });
+
 
     }
+
+
+
 }

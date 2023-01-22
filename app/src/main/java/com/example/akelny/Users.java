@@ -41,7 +41,7 @@ public class Users {
     public boolean validateNumber(String number) {
         boolean validated = false;
         String regex;
-        regex = "010\\d{8}|011\\d{8}|012\\d{8}|015\\d{8} ";
+        regex = "\\+2010\\d{8}|\\+2011\\d{8}|\\+2012\\d{8}|\\+2015\\d{8} ";
         Pattern pt = Pattern.compile(regex);
         Matcher mt = pt.matcher(number);
         validated = mt.matches();

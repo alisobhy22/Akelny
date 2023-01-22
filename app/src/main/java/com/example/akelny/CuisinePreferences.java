@@ -81,7 +81,9 @@ public class CuisinePreferences extends AppCompatActivity {
                 userNum = getIntent().getExtras().getString("phone");
                 name= getIntent().getExtras().getString("name");
                 users.register(name, userNum, cuisines);
-                Intent intent= new Intent(CuisinePreferences.this, Login.class);
+                Intent intent= new Intent(CuisinePreferences.this, Homepage.class);
+                intent.putExtra("user name",name);
+                intent.putExtra("user number",userNum);
                 startActivity(intent);
             }
         });
@@ -93,7 +95,9 @@ public class CuisinePreferences extends AppCompatActivity {
                 userNum = getIntent().getExtras().getString("phone");
                 name= getIntent().getExtras().getString("name");
                 users.register(name, userNum, cuisines);
-                Intent intent= new Intent(CuisinePreferences.this, Login.class);
+                Intent intent= new Intent(CuisinePreferences.this, Homepage.class);
+                intent.putExtra("user name",name);
+                intent.putExtra("user number",userNum);
                 startActivity(intent);
             }
         });

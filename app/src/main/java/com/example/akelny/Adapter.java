@@ -43,7 +43,6 @@ public class Adapter extends BaseAdapter {
 
     //The appointment date has to be in this format "dd/MM/yyyy"
     int checkIfDatePassed(String appointmentDateString) throws ParseException {
-
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         formatter.setTimeZone(TimeZone.getTimeZone("Africa/Cairo"));
 
