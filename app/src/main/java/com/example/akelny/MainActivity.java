@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -30,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
     String userName;
     String userNumber;
-    ArrayList<Reservation> reservationsList = getReservationsForAUser();
 
     TextView textV;
     ListView listView;
@@ -57,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final ArrayList<Reservation> reservationsList = getReservationsForAUser();
+
         userName = getIntent().getExtras().getString("user name");
         userNumber = getIntent().getExtras().getString("user number");
         System.out.println(userName + userNumber);
@@ -66,10 +69,23 @@ public class MainActivity extends AppCompatActivity {
 
         AppCompatActivity thisActivity = this;
 
-        listView = (ListView) findViewById(R.id.listview);
-        Adapter baseAdapter = new Adapter(thisActivity, reservationsList);
-        listView.setAdapter((ListAdapter) baseAdapter);
+        ListView araf = (ListView) findViewById(R.id.listview);
+        //Adapter baseAdapter = new Adapter(MainActivity.this, reservationsList);
+//        Adapter baseAdapter = new Adapter(thisActivity, reservationsList);
+        //listView.setAdapter((ListAdapter) baseAdapter);
+
+        CustomAA aa = new CustomAA(this, reservationsList);
+        araf.setAdapter(aa);
+
+        System.out.println("\nLINE 74\n");
         //System.out.println(baseAdapter);
+
+        araf.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, RestaurantDetails.class);
+            }
+        });
 
         homeBtn = (ImageButton) findViewById(R.id.imageButton);
         profileBtn = (ImageButton) findViewById(R.id.imageButton2);

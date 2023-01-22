@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,12 +31,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class Adapter extends android.widget.BaseAdapter {
+//public class Adapter extends android.widget.BaseAdapter {
+public class Adapter extends BaseAdapter {
 
     AppCompatActivity parentPage;
-    //Context context;
-    ArrayList<Reservation> reservationsList;
-    LayoutInflater inflater;
+    private Context context;
+    private ArrayList<Reservation> reservationsList;
+    //LayoutInflater inflater;
 
     Button giveFeedback, cancel;
 
@@ -119,10 +121,36 @@ public class Adapter extends android.widget.BaseAdapter {
         });
     }
 
-    public Adapter(AppCompatActivity parentPage, ArrayList<Reservation> reservationsList) {
-        this.parentPage=parentPage;
+    public void changeReservationStatus(Reservation oneReservation) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reservation = database.getReference("Reservations");
+        reservation.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DataSnapshot child : task.getResult().getChildren()) {
+                        if (((child.child("userNumber").getValue().toString()).equals(oneReservation.userNumber)) &&
+                                ((child.child("restaurantName").getValue().toString()).equals(oneReservation.restaurantName)) &&
+                                ((child.child("reservationDate").getValue().toString()).equals(oneReservation.reservationDate)) &&
+                                ((child.child("reservationTime").getValue().toString()).equals(oneReservation.reservationTime))) {
+                            String uniqueID = oneReservation.uniqueId;
+                            System.out.println("THIS IS THE UNIQUE ID: " + uniqueID);
+                            reservation.child(uniqueID).child("status").setValue("Cancelled");
+                        }
+                    }
+                } else {
+                    Log.e("Reservation", "Error updating database: " + task.getException().getMessage());
+                }
+            }
+        });
+    }
+
+    //public Adapter(AppCompatActivity parentPage, ArrayList<Reservation> reservationsList) {
+    public Adapter(Context context, ArrayList<Reservation> reservationsList) {
+        this.context=context;
+        //this.parentPage=parentPage;
         this.reservationsList=reservationsList;
-        inflater=LayoutInflater.from(parentPage.getApplicationContext());
+        //inflater=LayoutInflater.from(parentPage.getApplicationContext());
     }
     @Override
     public int getCount() {
@@ -141,7 +169,10 @@ public class Adapter extends android.widget.BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        System.out.println("I AM INSIDE ADAPTER");
+
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        System.out.println("\nI AM INSIDE ADAPTER\n");
 
         view = inflater.inflate(R.layout.activity_reservations, null);
 
@@ -175,7 +206,6 @@ public class Adapter extends android.widget.BaseAdapter {
         giveFeedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if(finalFeedbackResult)
                 {
                     AlertDialog.Builder builder = new AlertDialog.Builder(parentPage.getApplicationContext());
@@ -201,7 +231,7 @@ public class Adapter extends android.widget.BaseAdapter {
                 {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(parentPage.getApplicationContext());
                     String message;
-                    dialog.setTitle("Sorry, you cannot give feedback now. Please wait until the appointment date and time.");
+                    dialog.setTitle("Sorry, you cannot give feedback now. Please wait for the appointment date and time to pass.");
                     dialog.setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
@@ -214,6 +244,42 @@ public class Adapter extends android.widget.BaseAdapter {
                 }
             }
         });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(finalFeedbackResult==false)
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(parentPage.getApplicationContext());
+                    builder.setTitle("Cancellation Form");
+                    builder.setMessage("Your order has been cancelled.");
+
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            changeReservationStatus(reservationsList.get(i));
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+                else
+                {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(parentPage.getApplicationContext());
+                    dialog.setTitle("Sorry, you cannot cancel this reservation because the reservation date and time have already passed.");
+                    dialog.setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                }
+                            });
+
+                    AlertDialog alertDialog = dialog.create();
+                    alertDialog.show();
+                }
+            }
+        });
+
         return view;
     }
 }

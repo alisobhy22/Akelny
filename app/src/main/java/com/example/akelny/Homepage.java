@@ -209,7 +209,6 @@ public class Homepage extends AppCompatActivity {
                 intent.putExtra("Restaurant Rating", Restaurants.get(i).rating);
                 intent.putExtra("user name", userName);
                 intent.putExtra("user number", userNum);
-                System.out.println("yarab teshta3'al "+userName);
                 //intent.putExtras(bundle);
                 startActivity(intent);
             }
