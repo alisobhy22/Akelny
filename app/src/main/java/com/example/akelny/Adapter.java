@@ -172,10 +172,6 @@ public class Adapter extends BaseAdapter {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        //Log.d(
-        // "Reservation\n");
-        //Log.d("\nI AM INSIDE ADAPTER\n");
-
         System.out.println("\nI AM INSIDE ADAPTER\n");
 
         view = inflater.inflate(R.layout.activity_reservations, null);
@@ -212,7 +208,8 @@ public class Adapter extends BaseAdapter {
             public void onClick(View v) {
                 if(finalFeedbackResult)
                 {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(parentPage.getApplicationContext());
+                    //AlertDialog.Builder builder = new AlertDialog.Builder(parentPage.getApplicationContext());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(parentPage);
                     builder.setTitle("Feedback Form");
                     builder.setMessage("Please give us your feedback for the appointment.");
 
@@ -255,7 +252,7 @@ public class Adapter extends BaseAdapter {
             public void onClick(View v) {
                 if(finalFeedbackResult==false)
                 {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(parentPage.getApplicationContext());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(parentPage);
                     builder.setTitle("Cancellation Form");
                     builder.setMessage("Your order has been cancelled.");
 
@@ -270,7 +267,7 @@ public class Adapter extends BaseAdapter {
                 }
                 else
                 {
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(parentPage.getApplicationContext());
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(parentPage);
                     dialog.setTitle("Sorry, you cannot cancel this reservation because the reservation date and time have already passed.");
                     dialog.setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {

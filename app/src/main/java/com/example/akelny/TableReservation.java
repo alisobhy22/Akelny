@@ -183,14 +183,13 @@ public class TableReservation extends AppCompatActivity {
                 }
 
 
-                System.out.println("HIII");
-                NotificationCompat.Builder builder= new NotificationCompat.Builder(TableReservation.this, "Reserved");
+                /*NotificationCompat.Builder builder= new NotificationCompat.Builder(TableReservation.this, "Reserved");
                 builder.setContentTitle("Reservation is confirmed");
                 builder.setSmallIcon(R.drawable.request);
                 builder.setAutoCancel(true);
                 NotificationManagerCompat managerCompat=NotificationManagerCompat.from(TableReservation.this);
-                managerCompat.notify(1, builder.build());
-                System.out.println("HIIIIII");
+                managerCompat.notify(1, builder.build());*/
+
                 if (!(numberOfPeople.equals("")) || !(reservationDate.equals("")) || !(reservationTime.equals("")))
                 {
                     alertDialog();
