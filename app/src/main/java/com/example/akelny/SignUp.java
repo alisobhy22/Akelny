@@ -120,7 +120,7 @@ public class SignUp extends AppCompatActivity {
                 else
                 {
                     numberEntry.setHint("Phone number is incorrect");
-                    numberEntry.setHintTextColor(Integer.parseInt("FF0000"));
+                    numberEntry.setHintTextColor(Integer.parseInt("FF0000", 16));
                 }
                 /*checkRegisterReturn= users.register(name, number);
                 if (checkRegisterReturn==0)

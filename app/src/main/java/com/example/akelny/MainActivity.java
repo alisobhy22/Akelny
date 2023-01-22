@@ -69,18 +69,18 @@ public class MainActivity extends AppCompatActivity {
 
         AppCompatActivity thisActivity = this;
 
-        ListView araf = (ListView) findViewById(R.id.listview);
-        //Adapter baseAdapter = new Adapter(MainActivity.this, reservationsList);
-//        Adapter baseAdapter = new Adapter(thisActivity, reservationsList);
-        //listView.setAdapter((ListAdapter) baseAdapter);
+        //ListView = (ListView) findViewById(R.id.listview);
+
+
 
         CustomAA aa = new CustomAA(this, reservationsList);
-        araf.setAdapter(aa);
+        //araf.setAdapter(aa);
 
         System.out.println("\nLINE 74\n");
         //System.out.println(baseAdapter);
 
-        araf.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView = (ListView) findViewById(R.id.listview);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, RestaurantDetails.class);
@@ -147,6 +147,8 @@ public class MainActivity extends AppCompatActivity {
                                     ", Status: " + Reservations.get(i).status +
                                     ", User Number: " + Reservations.get(i).userNumber);
                 }
+                Adapter baseAdapter = new Adapter(MainActivity.this, Reservations);
+                listView.setAdapter((ListAdapter) baseAdapter);
             }
         });
         return Reservations;

@@ -172,6 +172,10 @@ public class Adapter extends BaseAdapter {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        //Log.d(
+        // "Reservation\n");
+        //Log.d("\nI AM INSIDE ADAPTER\n");
+
         System.out.println("\nI AM INSIDE ADAPTER\n");
 
         view = inflater.inflate(R.layout.activity_reservations, null);

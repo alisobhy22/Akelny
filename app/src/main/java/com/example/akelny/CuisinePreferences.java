@@ -38,7 +38,6 @@ public class CuisinePreferences extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cuisine_preferences);
 
-
         internationalChk= (CheckBox) findViewById(R.id.checkBox1);
         japeneseChk= (CheckBox) findViewById(R.id.checkBox2);
         italianChk= (CheckBox) findViewById(R.id.checkBox3);

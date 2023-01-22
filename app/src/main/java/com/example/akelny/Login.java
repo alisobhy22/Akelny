@@ -13,7 +13,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
@@ -65,16 +68,22 @@ public class Login extends AppCompatActivity {
             public void onClick(View view) {
                 username = String.valueOf(userNameEntry.getText());
                 number = String.valueOf(numberEntry.getText());
-
+                System.out.println("In `click");
                 DatabaseReference users = database.getReference("User");
+
                 users.child(number).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        System.out.println("Completed!");
+
                         if (task.isSuccessful()) {
                             if (task.getResult().exists()) {
                                 for (DataSnapshot child : task.getResult().getChildren()) {
+
+                                    System.out.println("Found data!!!!!!");
                                     String userName = child.getValue().toString();
                                     String phoneNumber = child.child(number).getKey();
+                                    System.out.println(userName);
                                     System.out.println(phoneNumber);
                                     if (phoneNumber.equals(number) && userName.equals(username)) {
                                         Intent intent = new Intent(Login.this, Homepage.class);
@@ -89,6 +98,27 @@ public class Login extends AppCompatActivity {
                         } else {
                             alertDialog();
                         }
+                    }
+                });
+
+                users.child(number).get().addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("FAILED TO GET THE DATA FROM THE DATABASE LOGIN");
+                    }
+                });
+
+                users.child(number).get().addOnCanceledListener(new OnCanceledListener() {
+                    @Override
+                    public void onCanceled() {
+                        System.out.println("CANCELLED TO GET THE DATA FROM THE DATABASE LOGIN");
+                    }
+                });
+
+                users.child(number).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+                    @Override
+                    public void onSuccess(DataSnapshot dataSnapshot) {
+                        System.out.println("SUCCESS TO GET THE DATA FROM THE DATABASE LOGIN");
                     }
                 });
             }
