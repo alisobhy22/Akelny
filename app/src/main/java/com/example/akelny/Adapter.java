@@ -146,9 +146,9 @@ public class Adapter extends BaseAdapter {
     }
 
     //public Adapter(AppCompatActivity parentPage, ArrayList<Reservation> reservationsList) {
-    public Adapter(Context context, ArrayList<Reservation> reservationsList) {
+    public Adapter(Context context, AppCompatActivity parentPage, ArrayList<Reservation> reservationsList) {
         this.context=context;
-        //this.parentPage=parentPage;
+        this.parentPage=parentPage;
         this.reservationsList=reservationsList;
         //inflater=LayoutInflater.from(parentPage.getApplicationContext());
     }
@@ -233,9 +233,10 @@ public class Adapter extends BaseAdapter {
                 }
                 else
                 {
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(parentPage.getApplicationContext());
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(parentPage);
                     String message;
-                    dialog.setTitle("Sorry, you cannot give feedback now. Please wait for the appointment date and time to pass.");
+                    dialog.setTitle("Sorry, you cannot give feedback now.");
+                    dialog.setMessage("Please wait for the appointment date and time to pass.");
                     dialog.setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,

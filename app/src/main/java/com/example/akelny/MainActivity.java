@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                                     ", Status: " + Reservations.get(i).status +
                                     ", User Number: " + Reservations.get(i).userNumber);
                 }
-                Adapter baseAdapter = new Adapter(MainActivity.this, Reservations);
+                Adapter baseAdapter = new Adapter(MainActivity.this, MainActivity.this, Reservations);
                 listView.setAdapter((ListAdapter) baseAdapter);
             }
         });
