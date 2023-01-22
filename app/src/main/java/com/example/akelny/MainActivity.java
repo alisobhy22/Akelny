@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DataSnapshot child : task.getResult().getChildren()) {
-                        String uniqueId = reservation.push().getKey();
+                        String uniqueId = child.getKey();
 
                         if(child.child("numberOfPeople").getValue()==null) {
                             System.err.println("NUMBER OF PEOPLE IS NULL");

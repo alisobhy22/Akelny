@@ -109,7 +109,7 @@ public class Adapter extends BaseAdapter {
                                 ((child.child("reservationDate").getValue().toString()).equals(oneReservation.reservationDate)) &&
                                 ((child.child("reservationTime").getValue().toString()).equals(oneReservation.reservationTime))) {
                             String uniqueID = oneReservation.uniqueId;
-                            System.out.println("THIS IS THE UNIQUE ID: " + uniqueID);
+                            System.out.println("THIS IS THE UNIQUE ID for feedback: " + uniqueID);
                             reservation.child(uniqueID).child("feedback").setValue(feedback);
                             //child.child("feedback").setValue(feedback);
                         }
@@ -135,7 +135,9 @@ public class Adapter extends BaseAdapter {
                                 ((child.child("reservationTime").getValue().toString()).equals(oneReservation.reservationTime))) {
                             String uniqueID = oneReservation.uniqueId;
                             System.out.println("THIS IS THE UNIQUE ID: " + uniqueID);
+                            System.out.println("THIS IS THE RESTAURANT NAME" + oneReservation.restaurantName);
                             reservation.child(uniqueID).child("status").setValue("Cancelled");
+
                         }
                     }
                 } else {
@@ -219,7 +221,7 @@ public class Adapter extends BaseAdapter {
 
                     builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
+                        public void onClick(DialogInterface dialogInterface, int index) {
                             String feedback = input.getText().toString();
                             reservationsList.get(i).feedback=feedback;
                             updateDatabase(reservationsList.get(i), feedback);
