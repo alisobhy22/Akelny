@@ -43,6 +43,7 @@ public class Adapter extends BaseAdapter {
 
     //The appointment date has to be in this format "dd/MM/yyyy"
     int checkIfDatePassed(String appointmentDateString) throws ParseException {
+
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         formatter.setTimeZone(TimeZone.getTimeZone("Africa/Cairo"));
 
@@ -101,21 +102,21 @@ public class Adapter extends BaseAdapter {
         reservation.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-            if (task.isSuccessful()) {
-                for (DataSnapshot child : task.getResult().getChildren()) {
-                    if (((child.child("userNumber").getValue().toString()).equals(oneReservation.userNumber)) &&
-                            ((child.child("restaurantName").getValue().toString()).equals(oneReservation.restaurantName)) &&
-                            ((child.child("reservationDate").getValue().toString()).equals(oneReservation.reservationDate)) &&
-                            ((child.child("reservationTime").getValue().toString()).equals(oneReservation.reservationTime))) {
-                        String uniqueID = oneReservation.uniqueId;
-                        System.out.println("THIS IS THE UNIQUE ID: " + uniqueID);
-                        reservation.child(uniqueID).child("feedback").setValue(feedback);
-                        //child.child("feedback").setValue(feedback);
+                if (task.isSuccessful()) {
+                    for (DataSnapshot child : task.getResult().getChildren()) {
+                        if (((child.child("userNumber").getValue().toString()).equals(oneReservation.userNumber)) &&
+                                ((child.child("restaurantName").getValue().toString()).equals(oneReservation.restaurantName)) &&
+                                ((child.child("reservationDate").getValue().toString()).equals(oneReservation.reservationDate)) &&
+                                ((child.child("reservationTime").getValue().toString()).equals(oneReservation.reservationTime))) {
+                            String uniqueID = oneReservation.uniqueId;
+                            System.out.println("THIS IS THE UNIQUE ID: " + uniqueID);
+                            reservation.child(uniqueID).child("feedback").setValue(feedback);
+                            //child.child("feedback").setValue(feedback);
+                        }
                     }
+                } else {
+                    Log.e("Reservation", "Error updating database: " + task.getException().getMessage());
                 }
-            } else {
-                Log.e("Reservation", "Error updating database: " + task.getException().getMessage());
-            }
             }
         });
     }
@@ -257,8 +258,10 @@ public class Adapter extends BaseAdapter {
 
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
+                        public void onClick(DialogInterface dialogInterface, int index) {
                             changeReservationStatus(reservationsList.get(i));
+                            reservationsList.get(i).status="Cancelled";
+                            notifyDataSetChanged();
                         }
                     });
                     AlertDialog alertDialog = builder.create();
@@ -284,5 +287,3 @@ public class Adapter extends BaseAdapter {
         return view;
     }
 }
-
-

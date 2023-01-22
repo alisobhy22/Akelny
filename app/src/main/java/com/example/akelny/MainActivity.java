@@ -31,7 +31,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     String userName;
-    String userNumber;
+    String userNumberFromIntent;
 
     TextView textV;
     ListView listView;
@@ -61,23 +61,14 @@ public class MainActivity extends AppCompatActivity {
         final ArrayList<Reservation> reservationsList = getReservationsForAUser();
 
         userName = getIntent().getExtras().getString("user name");
-        userNumber = getIntent().getExtras().getString("user number");
-        System.out.println(userName + userNumber);
+        userNumberFromIntent = getIntent().getExtras().getString("user number");
+        System.out.println(userName + userNumberFromIntent);
 
         textV = (TextView) findViewById(R.id.textView);
         textV.setText("Name: " + userName);
 
         AppCompatActivity thisActivity = this;
-
-        //ListView = (ListView) findViewById(R.id.listview);
-
-
-
-        CustomAA aa = new CustomAA(this, reservationsList);
-        //araf.setAdapter(aa);
-
         System.out.println("\nLINE 74\n");
-        //System.out.println(baseAdapter);
 
         listView = (ListView) findViewById(R.id.listview);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -94,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Homepage.class);
                 intent.putExtra("user name", userName);
-                intent.putExtra("user number", userNumber);
+                intent.putExtra("user number", userNumberFromIntent);
                 startActivity(intent);
             }
         });
@@ -116,6 +107,12 @@ public class MainActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (DataSnapshot child : task.getResult().getChildren()) {
                         String uniqueId = reservation.push().getKey();
+
+                        if(child.child("numberOfPeople").getValue()==null) {
+                            System.err.println("NUMBER OF PEOPLE IS NULL");
+                            continue;
+                        }
+
                         String numberOfPeople = child.child("numberOfPeople").getValue().toString();
                         String reservationDate = child.child("reservationDate").getValue().toString();
                         String reservationTime = child.child("reservationTime").getValue().toString();
@@ -127,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
                         Reservation reservation = new Reservation(uniqueId, numberOfPeople, reservationDate, reservationTime, specialRequests, order, userNumber, status, restaurantName);
 
-                        if ((child.child("userNumber").getValue().toString()).equals(userNumber)) {
+                        if ((child.child("userNumber").getValue().toString()).equals(userNumberFromIntent)) {
                             Reservations.add(reservation);
                         }
                     }
@@ -138,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(
                             "Reservation\n",
                             "Reservation ID: " + Reservations.get(i).uniqueId +
-                            ", Name: " + Reservations.get(i).restaurantName +
+                                    ", Name: " + Reservations.get(i).restaurantName +
                                     ", Date: " + Reservations.get(i).reservationDate +
                                     ", Time: " + Reservations.get(i).reservationTime +
                                     ", Number of People: " + Reservations.get(i).numberOfPeople +

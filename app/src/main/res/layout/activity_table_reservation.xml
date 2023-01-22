@@ -73,7 +73,7 @@
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Date (dd-mm-yyyy)"
+        android:text="Date (dd/mm/yyyy)"
         android:textColor="@color/black"
         android:fontFamily="casual"/>
         <EditText
