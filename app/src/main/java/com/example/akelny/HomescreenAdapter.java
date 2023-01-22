@@ -8,7 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,6 +21,7 @@ public class HomescreenAdapter extends android.widget.BaseAdapter {
 
     AppCompatActivity parentPage;
     LayoutInflater inflater;
+
 
     private ArrayList<Homepage.Restaurant> Restaurants;
     private String userName;
@@ -48,13 +52,20 @@ public class HomescreenAdapter extends android.widget.BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         view = inflater.inflate(R.layout.homepage_single_restaurant, null);
+        String imgUrl;
+
         TextView restaurantName = (TextView) view.findViewById(R.id.name);
         TextView cuisine = (TextView) view.findViewById(R.id.cuisine);
         TextView rating = (TextView) view.findViewById(R.id.rating);
+        ImageView restaurantImg= (ImageView) view.findViewById(R.id.restaurantImg);
 
         restaurantName.setText(Restaurants.get(i).getName());
         cuisine.setText(Restaurants.get(i).getCuisine());
         rating.setText(Float.toString(Restaurants.get(i).getRating()));
+        imgUrl= Restaurants.get(i).getImgUrl();
+
+        Picasso.get().load(imgUrl).resize(150, 150).into(restaurantImg);
+
 
         Button button = view.findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -62,12 +73,9 @@ public class HomescreenAdapter extends android.widget.BaseAdapter {
             public void onClick(View v) {
                 Intent intent= new Intent(parentPage.getApplicationContext(), RestaurantDetails.class);
                 Bundle bundle = new Bundle();
-                //bundle.putString("Restaurant Name", Restaurants.get(i).getName());
-                //intent.putExtras(bundle);
                 intent.putExtra("Restaurant Name", Restaurants.get(i).getName());
                 intent.putExtra("user name", userName);
                 intent.putExtra("user number", userNum);
-                System.out.println("yarab teshta3'al "+userName);
                 parentPage.startActivity(intent);
             }
         });

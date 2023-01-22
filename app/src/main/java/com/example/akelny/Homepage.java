@@ -51,6 +51,7 @@ public class Homepage extends AppCompatActivity {
         private String Name;
         private String Cuisine;
         private float rating;
+        private String imgUrl;
 
         public String getCuisine() {
             return Cuisine;
@@ -64,17 +65,22 @@ public class Homepage extends AppCompatActivity {
             return rating;
         }
 
+        public String getImgUrl() {
+            return imgUrl;
+        }
+
         public void setRating(float rating) {
             this.rating = rating;
         }
 
 
 
-        public Restaurant(String Name,String Cuisine, float rating)
+        public Restaurant(String Name,String Cuisine, float rating, String imgUrl)
         {
             this.Name = Name;
             this.Cuisine = Cuisine;
             this.rating = rating;
+            this.imgUrl=imgUrl;
         }
     }
 
@@ -171,7 +177,8 @@ public class Homepage extends AppCompatActivity {
                         String Name = child.getKey();
                         String cuisine = child.child("Cuisine").getValue().toString();
                         Float rating = child.child("Rating").getValue(Float.class);
-                        Restaurant restaurant = new Restaurant(Name, cuisine, rating.floatValue());
+                        String imgUrl = child.child("Image").getValue().toString();
+                        Restaurant restaurant = new Restaurant(Name, cuisine, rating.floatValue(), imgUrl);
                         Restaurants.add(restaurant);
                         System.out.println("Found restaurant: " + restaurant.getName());
                     }

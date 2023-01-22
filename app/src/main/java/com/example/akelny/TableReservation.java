@@ -109,26 +109,6 @@ public class TableReservation extends AppCompatActivity {
         AlertDialog alertDialog=dialog.create();
         alertDialog.show();
     }
-    protected void sendSMS(String phoneNumber, String message) {
-        /*Log.i("Send SMS", "");
-        Intent smsIntent = new Intent(Intent.ACTION_VIEW);
-
-        smsIntent.setData(Uri.parse("smsto:"));
-        smsIntent.setType("vnd.android-dir/mms-sms");
-        smsIntent.putExtra("address"  , new String ("5551212"));
-        smsIntent.putExtra("sms_body"  , "Test ");
-
-        try {
-            startActivity(smsIntent);
-            finish();
-            Log.i("Finished sending SMS...", "");
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(TableReservation.this,
-                    "SMS faild, please try again later.", Toast.LENGTH_SHORT).show();
-        }
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(phoneNumber, null, message, null, null);*/
-    }
 
     String restName;
     @Override
