@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -96,23 +97,22 @@ public class MainScreen extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (task.isSuccessful()) {
                             if (task.getResult().exists()) {
-                                for (DataSnapshot child : task.getResult().getChildren()) {
-                                    ArrayList<String> cuisines;
-                                    String userName = child.getValue().toString();
-                                    String phoneNumber = child.child(user.getPhoneNumber()).getKey();
-                                    cuisines= child.child("favCuisines").getValue(new ArrayList<String>().getClass());
-
-                                    System.out.println("HAAAI");
-                                    for (String cuisine:cuisines) {
-                                        System.out.println(cuisine);
-                                    }
-                                    if (phoneNumber.equals(user.getPhoneNumber())) {
-                                        Intent intent = new Intent(MainScreen.this, Homepage.class);
-                                        intent.putExtra("user number",user.getPhoneNumber());
-                                        intent.putExtra("user name",userName);
-                                        startActivity(intent);
-                                    }
-
+                                GenericTypeIndicator<ArrayList<String>> arrayListGenericTypeIndicator= new GenericTypeIndicator<ArrayList<String>>() {
+                                };
+                                ArrayList<String> cuisines;
+                                cuisines= task.getResult().child("favCuisines").getValue(arrayListGenericTypeIndicator);
+                                System.out.println("SEIF");
+                                for (Object cuisine:cuisines) {
+                                    System.out.println(cuisine);
+                                }
+                                String userName = task.getResult().child("name").getValue().toString();
+                                String phoneNumber = task.getResult().child(user.getPhoneNumber()).getKey();
+                                if (phoneNumber.equals(user.getPhoneNumber())) {
+                                    Intent intent = new Intent(MainScreen.this, Homepage.class);
+                                    intent.putExtra("user number",user.getPhoneNumber());
+                                    intent.putExtra("user name",userName);
+                                    intent.putExtra("cuisines", cuisines);
+                                    startActivity(intent);
                                 }
                             }else {
                                 Intent intent = new Intent(MainScreen.this,SignUp.class);

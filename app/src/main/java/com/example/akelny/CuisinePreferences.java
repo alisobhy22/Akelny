@@ -19,7 +19,7 @@ public class CuisinePreferences extends AppCompatActivity {
     public DatabaseReference myRef;
 
     CheckBox internationalChk;
-    CheckBox japeneseChk;
+    CheckBox japaneseChk;
     CheckBox italianChk;
     CheckBox egyptianChk;
     CheckBox mexicanChk;
@@ -39,7 +39,7 @@ public class CuisinePreferences extends AppCompatActivity {
         setContentView(R.layout.activity_cuisine_preferences);
 
         internationalChk= (CheckBox) findViewById(R.id.checkBox1);
-        japeneseChk= (CheckBox) findViewById(R.id.checkBox2);
+        japaneseChk= (CheckBox) findViewById(R.id.checkBox2);
         italianChk= (CheckBox) findViewById(R.id.checkBox3);
         egyptianChk= (CheckBox) findViewById(R.id.checkBox4);
         mexicanChk= (CheckBox) findViewById(R.id.checkBox5);
@@ -54,9 +54,9 @@ public class CuisinePreferences extends AppCompatActivity {
                 {
                     cuisines.add("International");
                 }
-                if (japeneseChk.isChecked())
+                if (japaneseChk.isChecked())
                 {
-                    cuisines.add("Japenese");
+                    cuisines.add("Japanese");
                 }
                 if (italianChk.isChecked())
                 {
@@ -74,7 +74,7 @@ public class CuisinePreferences extends AppCompatActivity {
                 {
                     cuisines.add("Lebanese");
                 }
-                else if(!internationalChk.isChecked() && !japeneseChk.isChecked()
+                else if(!internationalChk.isChecked() && !japaneseChk.isChecked()
                         && !italianChk.isChecked() && !egyptianChk.isChecked() && !mexicanChk.isChecked()
                         && !lebaneseChk.isChecked())
                     cuisines.add("");
