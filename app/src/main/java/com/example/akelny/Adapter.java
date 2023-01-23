@@ -272,7 +272,8 @@ public class Adapter extends BaseAdapter {
                 else
                 {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(parentPage);
-                    dialog.setTitle("Sorry, you cannot cancel this reservation because the reservation date and time have already passed.");
+                    dialog.setTitle("Sorry, you cannot cancel this reservation.");
+                    dialog.setMessage("The reservation date and time have already passed");
                     dialog.setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,

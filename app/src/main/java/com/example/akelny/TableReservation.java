@@ -111,6 +111,7 @@ public class TableReservation extends AppCompatActivity {
     }
 
     String restName;
+    String workingHours;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,10 +129,28 @@ public class TableReservation extends AppCompatActivity {
         orderEntry = (EditText) findViewById(R.id.orderEntry);
         restaurantName= (TextView) findViewById(R.id.textView);
         restName= getIntent().getExtras().getString("Restaurant name");
+        workingHours=getIntent().getExtras().getString("Working hours");
         if (restName==null)
             restaurantName.setText("Restaurant name");
         else
             restaurantName.setText(restName);
+
+        String startHrs; // restaurant
+        String startMins;
+        String endHrs;
+        String endMins;
+        startHrs=workingHours.substring(0,2);
+        startMins=workingHours.substring(3,5);
+        endHrs=workingHours.substring(6,8);
+        endMins=workingHours.substring(9,11);
+
+        int starthours_res=Integer.parseInt(startHrs);
+        int startmins_res=Integer.parseInt(startMins);
+        int endhours_res=Integer.parseInt(endHrs);
+        int endmins_res=Integer.parseInt(endMins);
+
+
+
 
         reserveBtn = (Button) findViewById(R.id.reserveBtn);
         cancelBtn = (Button) findViewById(R.id.cancelBtn);
@@ -147,19 +166,44 @@ public class TableReservation extends AppCompatActivity {
         reserveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 numberOfPeople = String.valueOf(numberOfPeopleEntry.getText());
                 reservationDate = String.valueOf(reservationDateEntry.getText());
                 reservationTime= String.valueOf(reservationTimeEntry.getText());
                 specialRequests= String.valueOf(specialRequestsEntry.getText());
                 order= String.valueOf(orderEntry.getText());
+                String user_startHrs; // user input
+                String user_startMins;
 
+                user_startHrs=reservationTime.substring(0,2);
+                user_startMins=reservationTime.substring(3,5);
+
+                int userHrs=Integer.parseInt(user_startHrs);
+                int usrMins=Integer.parseInt(user_startMins);
                 if (numberOfPeople.equals("") || reservationDate.equals("")|| reservationTime.equals(""))
                 {
                     alertDialogCantReserve();
+                }else if (userHrs<starthours_res||(userHrs==starthours_res && usrMins<startmins_res)||userHrs>endhours_res-1){
+
+                    AlertDialog.Builder dialog=new AlertDialog.Builder(TableReservation.this);
+                    String message;
+                    message= "The time entered is not within the working hours of the restaurant. Please choose another time.";
+                    dialog.setMessage(message);
+                    dialog.setTitle("Restaurant is closed");
+                    dialog.setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                }
+                            });
+                    AlertDialog alertDialog=dialog.create();
+                    alertDialog.show();
+
                 }else {
                     Reservation reservation= new Reservation(" ",numberOfPeople, reservationDate, reservationTime, specialRequests,
                             order, userNumber, "pending", restaurantName.getText().toString());
                     myRef.child("Reservations").push().setValue(reservation);
+                    alertDialog();
                 }
 
 
@@ -170,10 +214,6 @@ public class TableReservation extends AppCompatActivity {
                 NotificationManagerCompat managerCompat=NotificationManagerCompat.from(TableReservation.this);
                 managerCompat.notify(1, builder.build());*/
 
-                if (!(numberOfPeople.equals("")) || !(reservationDate.equals("")) || !(reservationTime.equals("")))
-                {
-                    alertDialog();
-                }
             }
         });
 

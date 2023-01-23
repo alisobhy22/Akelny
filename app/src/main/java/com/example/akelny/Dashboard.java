@@ -1,8 +1,13 @@
 package com.example.akelny;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +19,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 
 public class Dashboard extends AppCompatActivity {
 
@@ -23,6 +34,7 @@ public class Dashboard extends AppCompatActivity {
     public pending_reservationAdaptor pend_res_adaptor;
     public waiting_reservationAdaptor wait_res_adaptor;
     public accepted_reservationAdaptor acc_res_adaptor;
+
     ListView reservation_list;
     ListView waiting_list_list;
     ListView Accepted_reservations_list;
@@ -54,6 +66,13 @@ public class Dashboard extends AppCompatActivity {
                     accepted_reservations.add(reservation);
                     acc_res_adaptor.notifyDataSetChanged();
                     notifyDataSetChanged();
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(Dashboard.this,"My Notification");
+                    builder.setContentTitle("Reservation is confirmed");
+                    builder.setSmallIcon(R.drawable.request);
+                    builder.setContentText("Your reservation request has been accepted by the restaurant");
+                    builder.setAutoCancel(true);
+                    NotificationManagerCompat managerCompat=NotificationManagerCompat.from(Dashboard.this);
+                    managerCompat.notify(1,builder.build());
                 }
             });
 
@@ -64,6 +83,13 @@ public class Dashboard extends AppCompatActivity {
                     pending_reservations.remove(reservation);
                     reservation.status = "Canceled";
                     notifyDataSetChanged();
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(Dashboard.this,"My Notification");
+                    builder.setContentTitle("Reservation has been cancelled");
+                    builder.setSmallIcon(R.drawable.request);
+                    builder.setContentText("Your reservation request has been declined by the restaurant");
+                    builder.setAutoCancel(true);
+                    NotificationManagerCompat managerCompat=NotificationManagerCompat.from(Dashboard.this);
+                    managerCompat.notify(1,builder.build());
                 }
 
             });
@@ -77,6 +103,13 @@ public class Dashboard extends AppCompatActivity {
                     waiting_reservations.add(reservation);
                     wait_res_adaptor.notifyDataSetChanged();
                     notifyDataSetChanged();
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(Dashboard.this,"My Notification");
+                    builder.setContentTitle("You have been added to the waiting list");
+                    builder.setSmallIcon(R.drawable.request);
+                    builder.setContentText("We will notify you as soon as it's your turn");
+                    builder.setAutoCancel(true);
+                    NotificationManagerCompat managerCompat=NotificationManagerCompat.from(Dashboard.this);
+                    managerCompat.notify(1,builder.build());
                 }
             });
 
@@ -111,6 +144,13 @@ public class Dashboard extends AppCompatActivity {
                     accepted_reservations.add(reservation);
                     notifyDataSetChanged();
                     acc_res_adaptor.notifyDataSetChanged();
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(Dashboard.this,"My Notification");
+                    builder.setContentTitle("It is your turn!");
+                    builder.setSmallIcon(R.drawable.request);
+                    //builder.setContentText("We will notify you as soon as it's your turn");
+                    builder.setAutoCancel(true);
+                    NotificationManagerCompat managerCompat=NotificationManagerCompat.from(Dashboard.this);
+                    managerCompat.notify(1,builder.build());
                 }
             });
 
@@ -121,6 +161,13 @@ public class Dashboard extends AppCompatActivity {
                     waiting_reservations.remove(reservation);
                     reservation.status = "Canceled";
                     notifyDataSetChanged();
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(Dashboard.this,"My Notification");
+                    builder.setContentTitle("You have been removed from the waiting list");
+                    builder.setSmallIcon(R.drawable.request);
+                    //builder.setContentText("We will notify you as soon as it's your turn");
+                    builder.setAutoCancel(true);
+                    NotificationManagerCompat managerCompat=NotificationManagerCompat.from(Dashboard.this);
+                    managerCompat.notify(1,builder.build());
                 }
             });
             return convertView;
@@ -162,6 +209,12 @@ public class Dashboard extends AppCompatActivity {
                     accepted_reservations.remove(reservation);
                     reservation.status = "Canceled";
                     notifyDataSetChanged();
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(Dashboard.this,"My Notification");
+                    builder.setContentTitle("The reservation has been cancelled");
+                    builder.setSmallIcon(R.drawable.request);
+                    builder.setAutoCancel(true);
+                    NotificationManagerCompat managerCompat=NotificationManagerCompat.from(Dashboard.this);
+                    managerCompat.notify(1,builder.build());
                 }
 
             });
@@ -189,6 +242,12 @@ public class Dashboard extends AppCompatActivity {
         Accepted_reservations_list = (ListView) findViewById(R.id.Accepted_reservations_list);
         acc_res_adaptor = new accepted_reservationAdaptor(this,accepted_reservations);
         Accepted_reservations_list.setAdapter(acc_res_adaptor);
+        if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.O){
+
+            NotificationChannel channel= new NotificationChannel("My Notification","My Notification", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager =getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
     }
 
 

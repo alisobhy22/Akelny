@@ -51,6 +51,7 @@ public class RestaurantDetails extends AppCompatActivity {
         String resturantName = getIntent().getExtras().getString("Restaurant Name");
         String userName = getIntent().getExtras().getString("user name");
         String userNumber = getIntent().getExtras().getString("user number");
+        final String[] workingHours = new String[1];
 
         addressText= (TextView) findViewById(R.id.textViewA);
         cuisineText= (TextView) findViewById(R.id.textViewB);
@@ -94,7 +95,7 @@ public class RestaurantDetails extends AppCompatActivity {
                             Float rating = child.child("Rating").getValue(Float.class);
                             String address = child.child("Address").getValue().toString();
                             String menuURL = child.child("Menu URL").getValue().toString();
-                            String workingHours = child.child("Working hours").getValue().toString();
+                            workingHours[0] = child.child("Working hours").getValue().toString();
                             String image = child.child("Image").getValue().toString();
                             String cuisine = child.child("Cuisine").getValue().toString();
 
@@ -121,7 +122,7 @@ public class RestaurantDetails extends AppCompatActivity {
                             });
 
                             TextView textView5=findViewById(R.id.textView18);
-                            textView5.setText(workingHours);
+                            textView5.setText(workingHours[0]);
 
                             break;
                         }
@@ -141,6 +142,8 @@ public class RestaurantDetails extends AppCompatActivity {
                intent.putExtra("user name", userName);
                intent.putExtra("user number", userNumber);
                intent.putExtra("Restaurant name", resturantName);
+               intent.putExtra("Working hours", workingHours[0]);
+               System.out.println(workingHours[0]);
                startActivity(intent);
            }
        });

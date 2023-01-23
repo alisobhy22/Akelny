@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,6 +37,7 @@ public class MainScreen extends AppCompatActivity {
         userBtn = (Button) findViewById(R.id.userBtn);
         restaurantBtn = (Button) findViewById(R.id.restaurantBtn);
 
+
         userBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,12 +54,6 @@ public class MainScreen extends AppCompatActivity {
 
                 startActivityForResult(intent, 10001);
 
-
-
-
-
-                //Intent intent= new Intent(MainScreen.this, Login.class);
-                //startActivity(intent);
             }
         });
 
@@ -65,11 +61,10 @@ public class MainScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(MainScreen.this, RestaurantSignIn.class);
+
                 startActivity(intent);
             }
         });
-
-
 
     }
 
