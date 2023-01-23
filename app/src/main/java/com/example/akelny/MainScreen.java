@@ -17,9 +17,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -84,31 +87,34 @@ public class MainScreen extends AppCompatActivity {
                     //This is a returning user
 
                 }
+
+
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference users = database.getReference("User");
                 users.child(user.getPhoneNumber()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        System.out.println("Completed!");
-
                         if (task.isSuccessful()) {
                             if (task.getResult().exists()) {
                                 for (DataSnapshot child : task.getResult().getChildren()) {
-
-                                    System.out.println("Found data!!!!!!");
+                                    ArrayList<String> cuisines;
                                     String userName = child.getValue().toString();
                                     String phoneNumber = child.child(user.getPhoneNumber()).getKey();
+                                    cuisines= child.child("favCuisines").getValue(new ArrayList<String>().getClass());
 
-                                    System.out.println(userName);
-                                    System.out.println(phoneNumber);
+                                    System.out.println("HAAAI");
+                                    for (String cuisine:cuisines) {
+                                        System.out.println(cuisine);
+                                    }
                                     if (phoneNumber.equals(user.getPhoneNumber())) {
                                         Intent intent = new Intent(MainScreen.this, Homepage.class);
                                         intent.putExtra("user number",user.getPhoneNumber());
                                         intent.putExtra("user name",userName);
                                         startActivity(intent);
                                     }
+
                                 }
-                            } else {
+                            }else {
                                 Intent intent = new Intent(MainScreen.this,SignUp.class);
                                 intent.putExtra("number",user.getPhoneNumber());
                                 startActivity(intent);

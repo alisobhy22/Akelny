@@ -152,6 +152,10 @@ public class Homepage extends AppCompatActivity {
         userName = getIntent().getExtras().getString("user name");
         userNum = getIntent().getExtras().getString("user number");
         userCuisines = getIntent().getExtras().getStringArrayList("cuisines");
+        System.out.println("LEH NULL");
+        for (String cuisine:userCuisines) {
+            System.out.println(cuisine);
+        }
         AppCompatActivity thisActivity = this;
 
         listView = (ListView) findViewById(R.id.listview);
