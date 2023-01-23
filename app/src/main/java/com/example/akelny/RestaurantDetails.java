@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.AttributeSet;
@@ -109,8 +110,15 @@ public class RestaurantDetails extends AppCompatActivity {
                             TextView textView3=findViewById(R.id.textView17);
                             textView3.setText(rating.toString());
 
-                            TextView textView4=findViewById(R.id.textView);
-                            textView4.setText(menuURL);
+                            Button menuButton = (Button) findViewById(R.id.menuButton);
+                            menuButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent i = new Intent(Intent.ACTION_VIEW);
+                                    i.setData(Uri.parse(menuURL));
+                                    startActivity(i);
+                                }
+                            });
 
                             TextView textView5=findViewById(R.id.textView18);
                             textView5.setText(workingHours);

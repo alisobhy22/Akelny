@@ -18,13 +18,16 @@
             android:id="@+id/restaurantImg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:srcCompat="@tools:sample/avatars" />
+            tools:srcCompat="@tools:sample/avatars"
+            android:layout_weight="0.25"
+            android:layout_gravity="left"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginRight="15dp">
+            android:layout_marginRight="15dp"
+            android:layout_weight="0.5">
 
             <TextView
                 android:id="@+id/name"
@@ -71,7 +74,8 @@
             android:backgroundTint="#a8c987"
             android:fontFamily="casual"
             android:text="Select"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:layout_weight="0.25"/>
 
     </LinearLayout>
 
