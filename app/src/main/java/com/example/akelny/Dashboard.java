@@ -1,5 +1,6 @@
 package com.example.akelny;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -7,6 +8,7 @@ import androidx.core.app.NotificationManagerCompat;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +27,12 @@ import androidx.core.app.NotificationManagerCompat;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Dashboard extends AppCompatActivity {
 
@@ -63,6 +71,7 @@ public class Dashboard extends AppCompatActivity {
                     Log.d("Accept Button","Clicked");
                     pending_reservations.remove(reservation);
                     reservation.status = "Ready";
+                    changestatus(reservation,"Ready");
                     accepted_reservations.add(reservation);
                     acc_res_adaptor.notifyDataSetChanged();
                     notifyDataSetChanged();
@@ -82,6 +91,7 @@ public class Dashboard extends AppCompatActivity {
                     Log.d("Decline Button","Clicked");
                     pending_reservations.remove(reservation);
                     reservation.status = "Canceled";
+                    changestatus(reservation,"Canceled");
                     notifyDataSetChanged();
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(Dashboard.this,"My Notification");
                     builder.setContentTitle("Reservation has been cancelled");
@@ -100,6 +110,7 @@ public class Dashboard extends AppCompatActivity {
                     Log.d("Waiting List Button","Clicked");
                     pending_reservations.remove(reservation);
                     reservation.status = "Waiting";
+                    changestatus(reservation,"Waiting");
                     waiting_reservations.add(reservation);
                     wait_res_adaptor.notifyDataSetChanged();
                     notifyDataSetChanged();
@@ -141,6 +152,7 @@ public class Dashboard extends AppCompatActivity {
                     Log.d("Mark Ready","Clicked");
                     waiting_reservations.remove(reservation);
                     reservation.status = "Ready";
+                    changestatus(reservation,"Ready");
                     accepted_reservations.add(reservation);
                     notifyDataSetChanged();
                     acc_res_adaptor.notifyDataSetChanged();
@@ -160,6 +172,7 @@ public class Dashboard extends AppCompatActivity {
                     Log.d("Remove Button","Clicked");
                     waiting_reservations.remove(reservation);
                     reservation.status = "Canceled";
+                    changestatus(reservation,"Canceled");
                     notifyDataSetChanged();
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(Dashboard.this,"My Notification");
                     builder.setContentTitle("You have been removed from the waiting list");
@@ -197,6 +210,7 @@ public class Dashboard extends AppCompatActivity {
                     Log.d("Check in","Clicked");
                     accepted_reservations.remove(reservation);
                     reservation.status = "Finished";
+                    changestatus(reservation,"Finished");
                     notifyDataSetChanged();
                 }
 
@@ -208,6 +222,7 @@ public class Dashboard extends AppCompatActivity {
                     Log.d("Cancel Button","Clicked");
                     accepted_reservations.remove(reservation);
                     reservation.status = "Canceled";
+                    changestatus(reservation,"Canceled");
                     notifyDataSetChanged();
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(Dashboard.this,"My Notification");
                     builder.setContentTitle("The reservation has been cancelled");
@@ -227,10 +242,10 @@ public class Dashboard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        pending_reservations = create_reservations();
-        waiting_reservations = new ArrayList<Reservation>();
-        accepted_reservations = new ArrayList<Reservation>();
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("Signed_in");
 
+        create_reservations(name);
         reservation_list = (ListView) findViewById(R.id.reservations_list);
         pend_res_adaptor = new pending_reservationAdaptor(this,pending_reservations);
         reservation_list.setAdapter(pend_res_adaptor);
@@ -251,18 +266,81 @@ public class Dashboard extends AppCompatActivity {
     }
 
 
-    public ArrayList<Reservation> create_reservations() //for testing purposes
+    public void create_reservations(String name) //for testing purposes
     {
-        ArrayList<Reservation> reservations = new ArrayList<Reservation>();
+        accepted_reservations = new ArrayList<>();
+        waiting_reservations = new ArrayList<>();
+        pending_reservations = new ArrayList<>();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reservations_ref = database.getReference("Reservations");
+        reservations_ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful())
+                {
+                    for (DataSnapshot child : task.getResult().getChildren())
+                    {
+                        if(child.child("restaurantName").getValue().toString().equals(name))
+                        {
+                            if(child.child("status").getValue().toString().equals("pending"))
+                            {
+                                pending_reservations.add(getReservation(child));
+                                pend_res_adaptor.notifyDataSetChanged();
+                            }
+                            else if (child.child("status").getValue().toString().equals("Waiting"))
+                            {
+                                waiting_reservations.add(getReservation(child));
+                                wait_res_adaptor.notifyDataSetChanged();
+                            }
+                            else if (child.child("status").getValue().toString().equals("Ready"))
+                            {
+                                accepted_reservations.add(getReservation(child));
+                                acc_res_adaptor.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    Log.e("Reservation", "Error fetching data: " + task.getException().getMessage());
+                }
+            }
+        });
 
-        for(int i = 0; i < 10; i++)
-        {
-            Reservation r = new Reservation("", Integer.toString(i),"1/18/2023",Integer.toString(i) +
-                    ":00 PM",Integer.toString(i), "pasta", "01060188396","Pending","Crave");
-            reservations.add(r);
-        }
-
-
-        return reservations;
+    }
+    public Reservation getReservation(DataSnapshot child)
+    {
+        String UniqueID = child.getKey();
+        String numberofpeople = child.child("numberOfPeople").getValue().toString();
+        String reservationdate = child.child("reservationDate").getValue().toString();
+        String reservationTime = child.child("reservationTime").getValue().toString();
+        String specialRequests = child.child("specialRequests").getValue().toString();
+        String order = child.child("order").getValue().toString();
+        String status = child.child("status").getValue().toString();
+        String userNumber = child.child("userNumber").getValue().toString();
+        String restaurantName = child.child("restaurantName").getValue().toString();
+        String feedback = child.child("feedback").getValue().toString();
+        Reservation r = new Reservation(UniqueID,numberofpeople,reservationdate,reservationTime,specialRequests,order,userNumber,status,restaurantName,feedback);
+        return r;
+    }
+    public void changestatus(Reservation r,String status)
+    {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reservations_ref = database.getReference("Reservations");
+        reservations_ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful())
+                {
+                    System.out.println("Changed Reservation with Unique ID " + r.uniqueId + " from " + r.status + " to " +  status );
+                    reservations_ref.child(r.uniqueId).child("status").setValue(status);
+                    System.out.println("Proof: " + reservations_ref.child(r.uniqueId).child("status").toString());
+                }
+                else
+                {
+                    Log.e("Reservation", "Error fetching data: " + task.getException().getMessage());
+                }
+            }
+        });
     }
 }

@@ -36,10 +36,10 @@ class Reservation{
     public String status;
     public String userNumber;
     public String restaurantName;
-    public String feedback= "";
+    public String feedback;
 
     public Reservation(String uniqueId, String numberOfPeople, String reservationDate, String reservationTime, String specialRequests,
-                       String order, String userNumber, String status,String restaurantName)
+                       String order, String userNumber, String status,String restaurantName,String feedback)
     {
         this.uniqueId=uniqueId;
         this.numberOfPeople= numberOfPeople;
@@ -50,6 +50,7 @@ class Reservation{
         this.userNumber= userNumber;
         this.status= status;
         this.restaurantName = restaurantName;
+        this.feedback = feedback;
     }
 }
 
@@ -201,7 +202,7 @@ public class TableReservation extends AppCompatActivity {
 
                 }else {
                     Reservation reservation= new Reservation(" ",numberOfPeople, reservationDate, reservationTime, specialRequests,
-                            order, userNumber, "pending", restaurantName.getText().toString());
+                            order, userNumber, "pending", restaurantName.getText().toString(),"");
                     myRef.child("Reservations").push().setValue(reservation);
                     alertDialog();
                 }

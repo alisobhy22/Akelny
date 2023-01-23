@@ -121,8 +121,9 @@ public class MainActivity extends AppCompatActivity {
                         String status = child.child("status").getValue().toString();
                         String userNumber = child.child("userNumber").getValue().toString();
                         String restaurantName = child.child("restaurantName").getValue().toString();
+                        String feedback = child.child("feedback").getValue().toString();
 
-                        Reservation reservation = new Reservation(uniqueId, numberOfPeople, reservationDate, reservationTime, specialRequests, order, userNumber, status, restaurantName);
+                        Reservation reservation = new Reservation(uniqueId, numberOfPeople, reservationDate, reservationTime, specialRequests, order, userNumber, status, restaurantName,feedback);
 
                         if ((child.child("userNumber").getValue().toString()).equals(userNumberFromIntent)) {
                             Reservations.add(reservation);
