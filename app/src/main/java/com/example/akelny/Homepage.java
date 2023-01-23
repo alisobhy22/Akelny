@@ -25,7 +25,39 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Locale;
+//public class sortByCuisine extends Comparator<Restaurants.Restaurant> {
+//
+//    ArrayList<Restaurants.Restaurant> RestaurantsList;
+//    ArrayList<String> cuisines;
+//
+//    void swap(Restaurants.Restaurant r1, Restaurants.Restaurant r2) {
+//        Restaurants.Restaurant swap = r1;
+//        r1 = r2;
+//        r2 = swap;
+//    }
+//Line 209
+
+
+//    ArrayList<Restaurants.Restaurant> sort (ArrayList<Restaurants.Restaurant> list, String cuisine)
+//    {
+//        int indexForLastMatch=0;
+//        for (int i=0; i<list.size()-1; i++)
+//        {
+//            for (int j=0; j<list.size()-1; j++)
+//            {
+//                if(list.get(j).Cuisine.equals(cuisine))
+//                {
+//                    swap(list.get(j), list.get(indexForLastMatch));
+//                    indexForLastMatch=j;
+//                }
+//            }
+//        }
+//        return list;
+//    }
+//}
+
 
 public class Homepage extends AppCompatActivity {
 
@@ -37,7 +69,7 @@ public class Homepage extends AppCompatActivity {
 
     String userName;
     String userNum;
-
+    ArrayList<String> userCuisines;
 
     public class Restaurant {
         public String getName() {
@@ -73,8 +105,6 @@ public class Homepage extends AppCompatActivity {
             this.rating = rating;
         }
 
-
-
         public Restaurant(String Name,String Cuisine, float rating, String imgUrl)
         {
             this.Name = Name;
@@ -86,6 +116,15 @@ public class Homepage extends AppCompatActivity {
 
     private ArrayList<Restaurant> Restaurants = new ArrayList<Restaurant>();
 
+    boolean checkIfPreference (String restaurantCuisine, ArrayList<String> preferences)
+    {
+        for (int i=0; i<preferences.size(); i++)
+        {
+            if (restaurantCuisine.equals(preferences.get(i)))
+                return true;
+        }
+        return false;
+    }
 
     public Homepage()
     {
@@ -112,6 +151,7 @@ public class Homepage extends AppCompatActivity {
         setContentView(R.layout.activity_homepage);
         userName = getIntent().getExtras().getString("user name");
         userNum = getIntent().getExtras().getString("user number");
+        userCuisines = getIntent().getExtras().getStringArrayList("cuisines");
         AppCompatActivity thisActivity = this;
 
         listView = (ListView) findViewById(R.id.listview);
@@ -179,11 +219,17 @@ public class Homepage extends AppCompatActivity {
                         Float rating = child.child("Rating").getValue(Float.class);
                         String imgUrl = child.child("Image").getValue().toString();
                         Restaurant restaurant = new Restaurant(Name, cuisine, rating.floatValue(), imgUrl);
-                        Restaurants.add(restaurant);
+
+                        boolean preferred = checkIfPreference(cuisine, userCuisines);
+                        if(preferred==true)
+                            Restaurants.add(0, restaurant);
+                        else
+                            Restaurants.add(restaurant);
+
                         System.out.println("Found restaurant: " + restaurant.getName());
                     }
 
-                    HomescreenAdapter adapter = new HomescreenAdapter(thisActivity,Restaurants, userName, userNum);
+                    HomescreenAdapter adapter = new HomescreenAdapter(thisActivity, Restaurants, userName, userNum);
                     listView.setAdapter((ListAdapter) adapter);
                 } else {
                     Log.e("Restaurant", "Error fetching data: " + task.getException().getMessage());
@@ -191,8 +237,6 @@ public class Homepage extends AppCompatActivity {
                 }
             }
         });
-
-
 
         signOutButton = (Button) findViewById(R.id.signoutbutton);
         signOutButton.setOnClickListener(new View.OnClickListener() {
@@ -207,16 +251,11 @@ public class Homepage extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(Homepage.this, RestaurantDetails.class);
-                //Bundle bundle = new Bundle();
-                //bundle.putString("Restaurant Name", Restaurants.get(i).Name);
-                //bundle.putString("Restaurant Cuisine", Restaurants.get(i).Cuisine);
-                //bundle.putFloat("Restaurant Rating", Restaurants.get(i).rating);
                 intent.putExtra("Restaurant Name", Restaurants.get(i).Name);
                 intent.putExtra("Restaurant Cuisine", Restaurants.get(i).Cuisine);
                 intent.putExtra("Restaurant Rating", Restaurants.get(i).rating);
                 intent.putExtra("user name", userName);
                 intent.putExtra("user number", userNum);
-                //intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -234,7 +273,6 @@ public class Homepage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Homepage.this, MainActivity.class);
-                System.out.println("user naaamme" + userName);
                 intent.putExtra("user name", userName);
                 intent.putExtra("user number", userNum);
                 startActivity(intent);

@@ -21,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class MainScreen extends AppCompatActivity {
@@ -36,7 +37,6 @@ public class MainScreen extends AppCompatActivity {
 
         userBtn = (Button) findViewById(R.id.userBtn);
         restaurantBtn = (Button) findViewById(R.id.restaurantBtn);
-
 
         userBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +56,6 @@ public class MainScreen extends AppCompatActivity {
 
             }
         });
-
         restaurantBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,7 +64,6 @@ public class MainScreen extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
 
     @Override
@@ -100,6 +98,7 @@ public class MainScreen extends AppCompatActivity {
                                     System.out.println("Found data!!!!!!");
                                     String userName = child.getValue().toString();
                                     String phoneNumber = child.child(user.getPhoneNumber()).getKey();
+
                                     System.out.println(userName);
                                     System.out.println(phoneNumber);
                                     if (phoneNumber.equals(user.getPhoneNumber())) {
@@ -122,9 +121,6 @@ public class MainScreen extends AppCompatActivity {
                         }
                     }
                 });
-
-
-
 
             } else {
                 // Signing in failed

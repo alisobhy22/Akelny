@@ -84,6 +84,7 @@ public class CuisinePreferences extends AppCompatActivity {
                 Intent intent= new Intent(CuisinePreferences.this, Homepage.class);
                 intent.putExtra("user name",name);
                 intent.putExtra("user number",userNum);
+                intent.putExtra("cuisines", cuisines);
                 startActivity(intent);
             }
         });
@@ -98,6 +99,7 @@ public class CuisinePreferences extends AppCompatActivity {
                 Intent intent= new Intent(CuisinePreferences.this, Homepage.class);
                 intent.putExtra("user name",name);
                 intent.putExtra("user number",userNum);
+                intent.putExtra("cuisines", cuisines);
                 startActivity(intent);
             }
         });

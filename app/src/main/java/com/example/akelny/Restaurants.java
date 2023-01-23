@@ -21,7 +21,7 @@ public class Restaurants {
         private String Account_Password;
         private String Address;
         private float avg_spending;
-        private String Cuisine;
+        public String Cuisine;
         private String image;
         private String menu;
         private String hotline;
