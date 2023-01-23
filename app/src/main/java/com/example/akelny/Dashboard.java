@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -31,8 +32,10 @@ import android.app.PendingIntent;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Dashboard extends AppCompatActivity {
 
@@ -63,7 +66,7 @@ public class Dashboard extends AppCompatActivity {
             Button waiting_list_button = (Button) convertView.findViewById(R.id.waiting_list_button);
 
 
-            reservation_name.setText(reservation.userNumber);
+            fetchName(reservation.userNumber,reservation_name);
 
             accept_button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -144,7 +147,7 @@ public class Dashboard extends AppCompatActivity {
             Button Remove_button = (Button) convertView.findViewById(R.id.Remove_Button);
 
 
-            reservation_name.setText(reservation.userNumber);
+            fetchName(reservation.userNumber,reservation_name);
 
             Mark_Ready_button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -201,8 +204,7 @@ public class Dashboard extends AppCompatActivity {
             Button Check_in_button = (Button) convertView.findViewById(R.id.Check_In);
             Button Cancel_button = (Button) convertView.findViewById(R.id.Cancel);
 
-
-            reservation_name.setText(reservation.userNumber);
+            fetchName(reservation.userNumber,reservation_name);
 
             Check_in_button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -257,6 +259,39 @@ public class Dashboard extends AppCompatActivity {
         Accepted_reservations_list = (ListView) findViewById(R.id.Accepted_reservations_list);
         acc_res_adaptor = new accepted_reservationAdaptor(this,accepted_reservations);
         Accepted_reservations_list.setAdapter(acc_res_adaptor);
+
+       reservation_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                System.out.println("CLICKED");
+                Reservation reservation_selected = (Reservation) adapterView.getItemAtPosition(i);
+                Intent intent = new Intent (getApplicationContext(), Popup_dashboard.class);
+                intent.putExtra("Reservation",reservation_selected);
+                startActivity(intent);
+            }
+        });
+
+       waiting_list_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                System.out.println("CLICKED");
+                Reservation reservation_selected = (Reservation) adapterView.getItemAtPosition(i);
+                Intent intent = new Intent (getApplicationContext(), Popup_dashboard.class);
+                intent.putExtra("Reservation",reservation_selected);
+                startActivity(intent);
+            }
+        });
+
+       Accepted_reservations_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                System.out.println("CLICKED");
+                Reservation reservation_selected = (Reservation) adapterView.getItemAtPosition(i);
+                Intent intent = new Intent (getApplicationContext(), Popup_dashboard.class);
+                intent.putExtra("Reservation",reservation_selected);
+                startActivity(intent);
+            }
+        });
         if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.O){
 
             NotificationChannel channel= new NotificationChannel("My Notification","My Notification", NotificationManager.IMPORTANCE_DEFAULT);
@@ -343,4 +378,21 @@ public class Dashboard extends AppCompatActivity {
             }
         });
     }
+    public void fetchName(String phone,TextView t)
+    {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference user_ref = database.getReference("User");
+        user_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                t.setText(snapshot.child(phone).child("name").getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }

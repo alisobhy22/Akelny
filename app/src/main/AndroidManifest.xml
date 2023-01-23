@@ -22,6 +22,14 @@
         android:theme="@style/Theme.Akelny"
         tools:targetApi="31">
         <activity
+            android:name=".Popup_dashboard"
+            android:exported="false"
+            android:theme="@style/Theme.Akelny.Popup">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".CuisinePreferences"
             android:exported="false">
             <meta-data

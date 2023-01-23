@@ -26,7 +26,9 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-class Reservation{
+import java.io.Serializable;
+
+class Reservation implements Serializable {
     public String uniqueId;
     public String numberOfPeople;
     public String reservationDate;
