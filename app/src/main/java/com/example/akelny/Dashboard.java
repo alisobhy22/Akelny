@@ -50,7 +50,7 @@ public class Dashboard extends AppCompatActivity {
     ListView waiting_list_list;
     ListView Accepted_reservations_list;
 
-
+    Button signOutButton;
     public class pending_reservationAdaptor extends ArrayAdapter<Reservation>{
         public pending_reservationAdaptor(Context context,ArrayList<Reservation> reservations){
             super(context,0,reservations);
@@ -298,6 +298,14 @@ public class Dashboard extends AppCompatActivity {
             NotificationManager manager =getSystemService(NotificationManager.class);
             manager.createNotificationChannel(channel);
         }
+        signOutButton = (Button) findViewById(R.id.restSignOut);
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Dashboard.this, MainScreen.class);
+                startActivity(intent);
+            }
+        });
     }
 
 

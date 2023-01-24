@@ -215,9 +215,6 @@ public class TableReservation extends AppCompatActivity {
         int endhours_res=Integer.parseInt(endHrs);
         int endmins_res=Integer.parseInt(endMins);
 
-
-
-
         reserveBtn = (Button) findViewById(R.id.reserveBtn);
         cancelBtn = (Button) findViewById(R.id.cancelBtn);
         ImageButton homeBtn;
@@ -240,61 +237,65 @@ public class TableReservation extends AppCompatActivity {
                 order= String.valueOf(orderEntry.getText());
                 String user_startHrs; // user input
                 String user_startMins;
-
-                user_startHrs=reservationTime.substring(0,2);
-                user_startMins=reservationTime.substring(3,5);
-
-                int userHrs=Integer.parseInt(user_startHrs);
-                int usrMins=Integer.parseInt(user_startMins);
-
-
-                boolean cantReserve= false;
-                try {
-                    cantReserve= ifCanReserve(reservationDate, reservationTime);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                boolean cantReserve = false;
+                int userHrs=0;
+                int usrMins=0;
 
                 if (numberOfPeople.equals("") || reservationDate.equals("")|| reservationTime.equals(""))
                 {
                     alertDialogCantReserve();
-                }else if (cantReserve){
-                    AlertDialog.Builder dialog=new AlertDialog.Builder(TableReservation.this);
-                    String message;
-                    message= "The date/time you entered have passed. Please choose a coming date/time.";
-                    dialog.setMessage(message);
-                    dialog.setTitle("Cannot reserve");
-                    dialog.setPositiveButton("OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                }
-                            });
-                    AlertDialog alertDialog=dialog.create();
-                    alertDialog.show();
-                } else if (userHrs<starthours_res||(userHrs==starthours_res && usrMins<startmins_res)||userHrs>endhours_res-1){
+                }else
+                {
+                    user_startHrs=reservationTime.substring(0,2);
+                    user_startMins=reservationTime.substring(3,5);
 
-                    AlertDialog.Builder dialog=new AlertDialog.Builder(TableReservation.this);
-                    String message;
-                    message= "The time entered is not within the working hours of the restaurant. Please choose another time.";
-                    dialog.setMessage(message);
-                    dialog.setTitle("Restaurant is closed");
-                    dialog.setPositiveButton("OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                }
-                            });
-                    AlertDialog alertDialog=dialog.create();
-                    alertDialog.show();
+                    userHrs=Integer.parseInt(user_startHrs);
+                    usrMins=Integer.parseInt(user_startMins);
 
-                }else {
-                    Reservation reservation= new Reservation(" ",numberOfPeople, reservationDate, reservationTime, specialRequests,
-                            order, userNumber, "pending", restaurantName.getText().toString(),"");
-                    myRef.child("Reservations").push().setValue(reservation);
-                    alertDialog();
+
+                    cantReserve= false;
+                    try {
+                        cantReserve= ifCanReserve(reservationDate, reservationTime);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    if (cantReserve){
+                        AlertDialog.Builder dialog=new AlertDialog.Builder(TableReservation.this);
+                        String message;
+                        message= "The date/time you entered have passed. Please choose a coming date/time.";
+                        dialog.setMessage(message);
+                        dialog.setTitle("Cannot reserve");
+                        dialog.setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int which) {
+                                    }
+                                });
+                        AlertDialog alertDialog=dialog.create();
+                        alertDialog.show();
+                    } else if (userHrs<starthours_res||(userHrs==starthours_res && usrMins<startmins_res)||userHrs>endhours_res-1){
+
+                        AlertDialog.Builder dialog=new AlertDialog.Builder(TableReservation.this);
+                        String message;
+                        message= "The time entered is not within the working hours of the restaurant. Please choose another time.";
+                        dialog.setMessage(message);
+                        dialog.setTitle("Restaurant is closed");
+                        dialog.setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int which) {
+                                    }
+                                });
+                        AlertDialog alertDialog=dialog.create();
+                        alertDialog.show();
+
+                    }else {
+                        Reservation reservation= new Reservation(" ",numberOfPeople, reservationDate, reservationTime, specialRequests,
+                                order, userNumber, "pending", restaurantName.getText().toString(),"");
+                        myRef.child("Reservations").push().setValue(reservation);
+                        alertDialog();
+                    }
                 }
-
             }
         });
 
