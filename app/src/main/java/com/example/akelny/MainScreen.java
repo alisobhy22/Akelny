@@ -101,7 +101,6 @@ public class MainScreen extends AppCompatActivity {
                                 };
                                 ArrayList<String> cuisines;
                                 cuisines= task.getResult().child("favCuisines").getValue(arrayListGenericTypeIndicator);
-                                System.out.println("SEIF");
                                 for (Object cuisine:cuisines) {
                                     System.out.println(cuisine);
                                 }

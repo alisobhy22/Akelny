@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     String userName;
     String userNumberFromIntent;
-
+    ArrayList<String> cuisines;
     TextView textV;
     ListView listView;
     ImageButton homeBtn;
@@ -62,13 +62,11 @@ public class MainActivity extends AppCompatActivity {
 
         userName = getIntent().getExtras().getString("user name");
         userNumberFromIntent = getIntent().getExtras().getString("user number");
-        System.out.println(userName + userNumberFromIntent);
-
+        cuisines = getIntent().getExtras().getStringArrayList("cuisines");
         textV = (TextView) findViewById(R.id.textView);
         textV.setText("Name: " + userName);
 
         AppCompatActivity thisActivity = this;
-        System.out.println("\nLINE 74\n");
 
         listView = (ListView) findViewById(R.id.listview);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -86,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, Homepage.class);
                 intent.putExtra("user name", userName);
                 intent.putExtra("user number", userNumberFromIntent);
+                intent.putExtra("cuisines", cuisines);
                 startActivity(intent);
             }
         });
@@ -112,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
                             System.err.println("NUMBER OF PEOPLE IS NULL");
                             continue;
                         }
-
                         String numberOfPeople = child.child("numberOfPeople").getValue().toString();
                         String reservationDate = child.child("reservationDate").getValue().toString();
                         String reservationTime = child.child("reservationTime").getValue().toString();

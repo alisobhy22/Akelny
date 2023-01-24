@@ -37,7 +37,7 @@ public class RestaurantDetails extends AppCompatActivity {
     ImageButton homeBtn;
     ImageButton profileBtn;
     Button reserveBtn;
-
+    ArrayList<String> cuisines;
     TextView addressText;
     TextView cuisineText;
     TextView ratingText;
@@ -51,6 +51,7 @@ public class RestaurantDetails extends AppCompatActivity {
         String resturantName = getIntent().getExtras().getString("Restaurant Name");
         String userName = getIntent().getExtras().getString("user name");
         String userNumber = getIntent().getExtras().getString("user number");
+        cuisines = getIntent().getExtras().getStringArrayList("cuisines");
         final String[] workingHours = new String[1];
 
         addressText= (TextView) findViewById(R.id.textViewA);
@@ -69,6 +70,8 @@ public class RestaurantDetails extends AppCompatActivity {
                 Intent intent= new Intent(RestaurantDetails.this, Homepage.class);
                 intent.putExtra("user name", userName);
                 intent.putExtra("user number", userNumber);
+                intent.putExtra("cuisines", cuisines);
+                System.out.printf("in details cuisines are ", cuisines);
                 startActivity(intent);
             }
         });
@@ -79,6 +82,7 @@ public class RestaurantDetails extends AppCompatActivity {
                 Intent intent= new Intent(RestaurantDetails.this, MainActivity.class);
                 intent.putExtra("user name", userName);
                 intent.putExtra("user number", userNumber);
+                intent.putExtra("cuisines", cuisines);
                 startActivity(intent);
             }
         });
@@ -96,7 +100,6 @@ public class RestaurantDetails extends AppCompatActivity {
                             String address = child.child("Address").getValue().toString();
                             String menuURL = child.child("Menu URL").getValue().toString();
                             workingHours[0] = child.child("Working hours").getValue().toString();
-                            String image = child.child("Image").getValue().toString();
                             String cuisine = child.child("Cuisine").getValue().toString();
 
 
@@ -104,8 +107,6 @@ public class RestaurantDetails extends AppCompatActivity {
                             addressTV.setText(address);
                             TextView RestTV= findViewById(R.id.restNameEntry);
                             RestTV.setText(Name);
-                            ImageView imageView=findViewById(R.id.imageView);
-                            // FIXME: Find a way to display the image into the imageView
                             TextView textView2=findViewById(R.id.textView16);
                             textView2.setText(cuisine);
                             TextView textView3=findViewById(R.id.textView17);
@@ -143,7 +144,7 @@ public class RestaurantDetails extends AppCompatActivity {
                intent.putExtra("user number", userNumber);
                intent.putExtra("Restaurant name", resturantName);
                intent.putExtra("Working hours", workingHours[0]);
-               System.out.println(workingHours[0]);
+               intent.putExtra("cuisines", cuisines);
                startActivity(intent);
            }
        });

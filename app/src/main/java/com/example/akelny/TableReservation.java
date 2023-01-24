@@ -27,6 +27,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 
 class Reservation implements Serializable {
     public String uniqueId;
@@ -65,7 +72,7 @@ public class TableReservation extends AppCompatActivity {
     EditText specialRequestsEntry;
     EditText orderEntry;
     TextView restaurantName;
-
+    public ArrayList<String> cuisines;
     String numberOfPeople, reservationDate, reservationTime, specialRequests, order, userNumber;
 
     Button reserveBtn;
@@ -74,6 +81,55 @@ public class TableReservation extends AppCompatActivity {
     String userName;
     public DatabaseReference myRef;
     public FirebaseDatabase database;
+
+    int checkIfDatePassed(String appointmentDateString) throws ParseException {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        formatter.setTimeZone(TimeZone.getTimeZone("Africa/Cairo"));
+
+        Date appointmentDate = formatter.parse(appointmentDateString);
+
+        Date currentDate = new Date();
+        String currentDateString = formatter.format(currentDate);
+        currentDate = formatter.parse(currentDateString);
+
+        return (currentDate.compareTo(appointmentDate));
+    }
+
+    int checkIfTimePassed(String appointmentTimeString) {
+        LocalTime appointmentTime = null;
+        ZoneId id = null;
+        LocalTime currentTime = null;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            appointmentTime = LocalTime.parse(appointmentTimeString);
+            id = ZoneId.of("Africa/Cairo");
+            currentTime = LocalTime.now(id);
+        }
+
+        System.out.println("Appointment Time: "+appointmentTime+"\n");
+        System.out.println("Local Time: "+currentTime+"\n");
+
+        return currentTime.compareTo(appointmentTime);
+    }
+
+    boolean ifCanReserve(String appointmentDateString, String appointmentTimeString) throws ParseException {
+        int dateResult = checkIfDatePassed(appointmentDateString);
+        if (dateResult>0) //currentDate occurs after appointmentDate
+            return true; //User can give feedback
+        else if(dateResult<0) //currentDate occurs before appointmentDate
+            return false; //user can cancel the appointment
+        else //Both dates are equal, so compare time
+        {
+            int timeResult = checkIfTimePassed(appointmentTimeString);
+            if (timeResult>0) //currentTime occurs after appointmentTime
+                return true; //user can give feedback
+            else if(timeResult<0) //currentTime occurs before appointmentTime
+                return false; //user can cancel the appointment
+            else //Both times are equal
+                return false;
+        }
+    }
 
     public void alertDialog() {
         AlertDialog.Builder dialog=new AlertDialog.Builder(this);
@@ -88,6 +144,7 @@ public class TableReservation extends AppCompatActivity {
                         Intent intent= new Intent(TableReservation.this, Homepage.class);
                         intent.putExtra("user name", userName);
                         intent.putExtra("user number", userNumber);
+                        intent.putExtra("cuisines", cuisines);
                         startActivity(intent);
                     }
                 });
@@ -122,6 +179,7 @@ public class TableReservation extends AppCompatActivity {
 
         userName = getIntent().getExtras().getString("user name");
         userNumber= getIntent().getExtras().getString("user number");
+        cuisines = getIntent().getExtras().getStringArrayList("cuisines");
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
@@ -146,6 +204,11 @@ public class TableReservation extends AppCompatActivity {
         startMins=workingHours.substring(3,5);
         endHrs=workingHours.substring(6,8);
         endMins=workingHours.substring(9,11);
+
+        if (endHrs.equals("00"))
+        {
+            endHrs="24";
+        }
 
         int starthours_res=Integer.parseInt(startHrs);
         int startmins_res=Integer.parseInt(startMins);
@@ -183,10 +246,33 @@ public class TableReservation extends AppCompatActivity {
 
                 int userHrs=Integer.parseInt(user_startHrs);
                 int usrMins=Integer.parseInt(user_startMins);
+
+
+                boolean cantReserve= false;
+                try {
+                    cantReserve= ifCanReserve(reservationDate, reservationTime);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
                 if (numberOfPeople.equals("") || reservationDate.equals("")|| reservationTime.equals(""))
                 {
                     alertDialogCantReserve();
-                }else if (userHrs<starthours_res||(userHrs==starthours_res && usrMins<startmins_res)||userHrs>endhours_res-1){
+                }else if (cantReserve){
+                    AlertDialog.Builder dialog=new AlertDialog.Builder(TableReservation.this);
+                    String message;
+                    message= "The date/time you entered have passed. Please choose a coming date/time.";
+                    dialog.setMessage(message);
+                    dialog.setTitle("Cannot reserve");
+                    dialog.setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                }
+                            });
+                    AlertDialog alertDialog=dialog.create();
+                    alertDialog.show();
+                } else if (userHrs<starthours_res||(userHrs==starthours_res && usrMins<startmins_res)||userHrs>endhours_res-1){
 
                     AlertDialog.Builder dialog=new AlertDialog.Builder(TableReservation.this);
                     String message;
@@ -209,14 +295,6 @@ public class TableReservation extends AppCompatActivity {
                     alertDialog();
                 }
 
-
-                /*NotificationCompat.Builder builder= new NotificationCompat.Builder(TableReservation.this, "Reserved");
-                builder.setContentTitle("Reservation is confirmed");
-                builder.setSmallIcon(R.drawable.request);
-                builder.setAutoCancel(true);
-                NotificationManagerCompat managerCompat=NotificationManagerCompat.from(TableReservation.this);
-                managerCompat.notify(1, builder.build());*/
-
             }
         });
 
@@ -226,6 +304,7 @@ public class TableReservation extends AppCompatActivity {
                 Intent intent= new Intent(TableReservation.this, Homepage.class);
                 intent.putExtra("user name", userName);
                 intent.putExtra("user number", userNumber);
+                intent.putExtra("cuisines", cuisines);
                 startActivity(intent);
             }
         });
@@ -238,6 +317,7 @@ public class TableReservation extends AppCompatActivity {
                 Intent intent= new Intent(TableReservation.this, Homepage.class);
                 intent.putExtra("user name", userName);
                 intent.putExtra("user number", userNumber);
+                intent.putExtra("cuisines", cuisines);
                 startActivity(intent);
             }
         });
@@ -248,6 +328,7 @@ public class TableReservation extends AppCompatActivity {
                 Intent intent= new Intent(TableReservation.this, MainActivity.class);
                 intent.putExtra("user name", userName);
                 intent.putExtra("user number", userNumber);
+                intent.putExtra("cuisines", cuisines);
                 startActivity(intent);
             }
         });

@@ -92,14 +92,7 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 name = String.valueOf(nameEntry.getText());
-                //number = String.valueOf(numberEntry.getText());
                 int checkRegisterReturn;
-
-
-
-
-
-
 
                             Intent intent= new Intent(SignUp.this, CuisinePreferences.class);
                             intent.putExtra("phone",verified_number);

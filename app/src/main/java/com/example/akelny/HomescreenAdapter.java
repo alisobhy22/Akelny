@@ -26,12 +26,15 @@ public class HomescreenAdapter extends android.widget.BaseAdapter {
     private ArrayList<Homepage.Restaurant> Restaurants;
     private String userName;
     private String userNum;
-    public HomescreenAdapter(AppCompatActivity parentPage, ArrayList<Homepage.Restaurant> res, String userName, String userNum) {
+
+    public ArrayList<String> cuisines;
+    public HomescreenAdapter(AppCompatActivity parentPage, ArrayList<Homepage.Restaurant> res, String userName, String userNum, ArrayList<String> cuisines) {
 
         this.parentPage=parentPage;
         this.Restaurants=res;
         this.userName= userName;
         this.userNum= userNum;
+        this.cuisines=cuisines;
         inflater=LayoutInflater.from(parentPage.getApplicationContext());
     }
     @Override
@@ -76,6 +79,7 @@ public class HomescreenAdapter extends android.widget.BaseAdapter {
                 intent.putExtra("Restaurant Name", Restaurants.get(i).getName());
                 intent.putExtra("user name", userName);
                 intent.putExtra("user number", userNum);
+                intent.putExtra("cuisines", cuisines);
                 parentPage.startActivity(intent);
             }
         });

@@ -27,37 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Locale;
-//public class sortByCuisine extends Comparator<Restaurants.Restaurant> {
-//
-//    ArrayList<Restaurants.Restaurant> RestaurantsList;
-//    ArrayList<String> cuisines;
-//
-//    void swap(Restaurants.Restaurant r1, Restaurants.Restaurant r2) {
-//        Restaurants.Restaurant swap = r1;
-//        r1 = r2;
-//        r2 = swap;
-//    }
-//Line 209
-
-
-//    ArrayList<Restaurants.Restaurant> sort (ArrayList<Restaurants.Restaurant> list, String cuisine)
-//    {
-//        int indexForLastMatch=0;
-//        for (int i=0; i<list.size()-1; i++)
-//        {
-//            for (int j=0; j<list.size()-1; j++)
-//            {
-//                if(list.get(j).Cuisine.equals(cuisine))
-//                {
-//                    swap(list.get(j), list.get(indexForLastMatch));
-//                    indexForLastMatch=j;
-//                }
-//            }
-//        }
-//        return list;
-//    }
-//}
-
 
 public class Homepage extends AppCompatActivity {
 
@@ -152,7 +121,6 @@ public class Homepage extends AppCompatActivity {
         userName = getIntent().getExtras().getString("user name");
         userNum = getIntent().getExtras().getString("user number");
         userCuisines = getIntent().getExtras().getStringArrayList("cuisines");
-        System.out.println("LEH NULL");
         for (String cuisine:userCuisines) {
             System.out.println(cuisine);
         }
@@ -165,7 +133,7 @@ public class Homepage extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 if (query.isEmpty())
                 {
-                    HomescreenAdapter adapter = new HomescreenAdapter(thisActivity, Restaurants, userName, userNum);
+                    HomescreenAdapter adapter = new HomescreenAdapter(thisActivity, Restaurants, userName, userNum, userCuisines);
                     listView.setAdapter((ListAdapter) adapter);
                     return true;
                 }
@@ -181,7 +149,7 @@ public class Homepage extends AppCompatActivity {
                         finalList.add(res);
                     }
                 }
-                HomescreenAdapter adapter = new HomescreenAdapter(thisActivity, finalList, userName, userNum);
+                HomescreenAdapter adapter = new HomescreenAdapter(thisActivity, finalList, userName, userNum, userCuisines);
                 listView.setAdapter((ListAdapter) adapter);
                 return true;
             }
@@ -190,7 +158,7 @@ public class Homepage extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty())
                 {
-                    HomescreenAdapter adapter = new HomescreenAdapter(thisActivity, Restaurants, userName, userNum);
+                    HomescreenAdapter adapter = new HomescreenAdapter(thisActivity, Restaurants, userName, userNum, userCuisines);
                     listView.setAdapter((ListAdapter) adapter);
                     return true;
                 }
@@ -205,7 +173,7 @@ public class Homepage extends AppCompatActivity {
                         finalList.add(res);
                     }
                 }
-                HomescreenAdapter adapter = new HomescreenAdapter(thisActivity, finalList, userName, userNum);
+                HomescreenAdapter adapter = new HomescreenAdapter(thisActivity, finalList, userName, userNum, userCuisines);
                 listView.setAdapter((ListAdapter) adapter);
                 return true;
             }
@@ -233,7 +201,7 @@ public class Homepage extends AppCompatActivity {
                         System.out.println("Found restaurant: " + restaurant.getName());
                     }
 
-                    HomescreenAdapter adapter = new HomescreenAdapter(thisActivity, Restaurants, userName, userNum);
+                    HomescreenAdapter adapter = new HomescreenAdapter(thisActivity, Restaurants, userName, userNum, userCuisines);
                     listView.setAdapter((ListAdapter) adapter);
                 } else {
                     Log.e("Restaurant", "Error fetching data: " + task.getException().getMessage());
@@ -260,17 +228,11 @@ public class Homepage extends AppCompatActivity {
                 intent.putExtra("Restaurant Rating", Restaurants.get(i).rating);
                 intent.putExtra("user name", userName);
                 intent.putExtra("user number", userNum);
+                intent.putExtra("cuisines", userCuisines);
                 startActivity(intent);
             }
         });
 
-        /*homeBtn = (ImageButton) findViewById(R.id.imageButton);
-        homeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               alertDialog();
-            }
-        });*/
 
         profileBtn = (ImageButton) findViewById(R.id.imageButton2);
         profileBtn.setOnClickListener(new View.OnClickListener() {
@@ -279,6 +241,7 @@ public class Homepage extends AppCompatActivity {
                 Intent intent = new Intent(Homepage.this, MainActivity.class);
                 intent.putExtra("user name", userName);
                 intent.putExtra("user number", userNum);
+                intent.putExtra("cuisines", userCuisines);
                 startActivity(intent);
 
             }
