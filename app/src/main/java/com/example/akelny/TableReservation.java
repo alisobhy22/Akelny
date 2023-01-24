@@ -244,8 +244,24 @@ public class TableReservation extends AppCompatActivity {
                 if (numberOfPeople.equals("") || reservationDate.equals("")|| reservationTime.equals(""))
                 {
                     alertDialogCantReserve();
-                }else
+                }else if(reservationTime.length()<5 || reservationDate.length()<10){
+                    AlertDialog.Builder dialog=new AlertDialog.Builder(TableReservation.this);
+                    String message;
+                    message= "Please follow the format stated for the date and time";
+                    dialog.setMessage(message);
+                    dialog.setTitle("Cannot proceed with reservation");
+                    dialog.setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                }
+                            });
+                    AlertDialog alertDialog=dialog.create();
+                    alertDialog.show();
+                }
+                else
                 {
+
                     user_startHrs=reservationTime.substring(0,2);
                     user_startMins=reservationTime.substring(3,5);
 
